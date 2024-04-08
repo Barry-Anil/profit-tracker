@@ -101,7 +101,7 @@ const themeConfigSlice = createSlice({
         },
 
         setPageTitle(state, { payload }) {
-            document.title = `${payload} | VG Industrial ERP`;
+            document.title = `${payload} | Profit Tracker`;
         },
     },
 });

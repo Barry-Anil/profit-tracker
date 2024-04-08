@@ -40,7 +40,7 @@ const Login = () => {
                         </div>
                         <div className=" lg:mt-16">
                             <div className="mb-6">
-                                <h1 className="text-3xl font-bold md:text-4xl text-center">Sign in to ERP Online</h1>
+                                <h1 className="text-3xl font-bold md:text-4xl text-center">Sign in to Profit Tracker</h1>
                             </div>
                             <div>
                                 <Button disabled={status === 'loading'} onClick={() => signIn('azure-ad')} className="w-full text-lg font-semibold">

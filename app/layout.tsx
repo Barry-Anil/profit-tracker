@@ -10,8 +10,8 @@ import { Toaster } from 'sonner';
 import '../styles/tailwind.css';
 
 export const metadata = {
-    title: 'VG ERP Online',
-    description: 'VG ERP Online',
+    title: 'Profit Tracker',
+    description: 'Profit Tracker',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

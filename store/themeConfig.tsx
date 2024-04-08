@@ -68,7 +68,7 @@ const useThemeConfigStore = create<ThemeConfigState & ThemeConfigActions>((set) 
     toggleLocale: (payload = 'en') => set((state) => ({ ...state, locale: payload })),
     toggleSidebar: () => set((state) => ({ ...state, sidebar: !state.sidebar })),
     setPageTitle: (payload) => {
-        document.title = `${payload} | VG Industrial ERP`;
+        document.title = `${payload} | Profit Tracker`;
     },
 }));
 
