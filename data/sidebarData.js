@@ -12,6 +12,14 @@ export const sidebarData = [
                         title: 'Home',
                         link: '/',
                     },
+                    {
+                        title: 'Sales Commission Expense Heads',
+                        link: '/sales-commission-expense-head',
+                    },
+                    {
+                        title: 'Define Prodiction Expense',
+                        link: '/define-production-expense',
+                    },
                 ],
             },
         ],

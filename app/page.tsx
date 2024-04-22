@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-const Page = async () => {
+const SalesCommissionExpenseHead = async () => {
     const session = await auth();
     if (!session?.user) {
         redirect('/login');
@@ -18,4 +18,4 @@ const Page = async () => {
     );
 };
 
-export default Page;
+export default SalesCommissionExpenseHead;
