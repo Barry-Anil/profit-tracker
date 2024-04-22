@@ -17,7 +17,7 @@ export const sidebarData = [
                         link: '/sales-commission-expense-head',
                     },
                     {
-                        title: 'Define Prodiction Expense',
+                        title: 'Define Production Expense',
                         link: '/define-production-expense',
                     },
                 ],
