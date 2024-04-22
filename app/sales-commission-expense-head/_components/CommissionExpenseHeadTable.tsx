@@ -1,16 +1,23 @@
 import BasicDataTable from '@/components/BasicDataTable';
 import { DataTablePagination } from '@/components/DataTablePagination';
 import { Button } from '@/components/ui/button';
-import { UseQueryResult } from '@tanstack/react-query';
-import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
-import { Edit, Trash2 } from 'lucide-react';
+import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, RowData } from '@tanstack/react-table';
+import { Edit, Save, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import TableToolbar from './TableToolbar';
+import EditableCell from './EditableCell';
 const alternateData: any = [];
 
 type MainOrderTableProps = {
     comissionDetails: any;
 };
+
+declare module '@tanstack/react-table' {
+    interface TableMeta<TData extends RowData> {
+        updateCommissionExpenseHead?: (rowIndex: number, columnId: keyof any, value: string) => void;
+    }
+}
 
 const MainOrderTable = ({ comissionDetails }: MainOrderTableProps) => {
     const router = useRouter();
@@ -20,7 +27,7 @@ const MainOrderTable = ({ comissionDetails }: MainOrderTableProps) => {
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
     const [globalFilter, setGlobalFilter] = React.useState('');
-    const [addParent, setAddParent] = React.useState(false);
+    const [commissionData, setCommissionData] = React.useState(comissionDetails ?? alternateData);
     const columns: ColumnDef<any>[] = [
         {
             id: 'sr_no',
@@ -98,31 +105,31 @@ const MainOrderTable = ({ comissionDetails }: MainOrderTableProps) => {
             id: 'host_sales_commision',
             accessorKey: 'host_sales_commision',
             header: 'Host Sales Commission',
-            cell: ({ row }) => <p className="truncate">{row.original.host_sales_commision}</p>,
+            cell: EditableCell,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'host_sales_commision',
-            accessorKey: 'host_sales_commision',
+            id: 'other_host_sales_commision',
+            accessorKey: 'other_host_sales_commision',
             header: 'Other Host Sales Commission',
-            cell: ({ row }) => <p className="truncate">{row.original.host_sales_commision}</p>,
+            cell: EditableCell,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'host_sales_commision',
-            accessorKey: 'New Size Meas Commission',
+            id: 'new_size_meas_commission',
+            accessorKey: 'new_size_meas_commission',
             header: 'New Size Meas Commission',
-            cell: ({ row }) => <p className="truncate">{row.original.salestrip_name}</p>,
+            cell: EditableCell,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'host_sales_commision',
-            accessorKey: 'Old Size Meas Commission',
+            id: 'old_size_meas_commission',
+            accessorKey: 'old_size_meas_commission',
             header: 'Old Size Meas Commission',
-            cell: ({ row }) => <p className="truncate">{row.original.salestrip_name}</p>,
+            cell: EditableCell,
             enableSorting: true,
             enableHiding: true,
         },
@@ -138,18 +145,18 @@ const MainOrderTable = ({ comissionDetails }: MainOrderTableProps) => {
 
                         }}
                     >
-                        <Edit className="h-4 w-4 m-0" />
+                        <Save className="h-4 w-4 m-0" />
                     </Button>
-                    <Button size="icon" variant="outline">
+                    <Button size="icon" variant="destructive">
                         <Trash2 className="h-4 w-4" />
                     </Button>
                 </div>
             ),
         },
     ];
-    const tableData = comissionDetails ?? alternateData;
+    console.log(commissionData, "this is commission data");;
     const table = useReactTable({
-        data: tableData,
+        data: commissionData,
         columns,
         state: {
             sorting,
@@ -167,9 +174,26 @@ const MainOrderTable = ({ comissionDetails }: MainOrderTableProps) => {
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        meta: {
+            updateCommissionExpenseHead: (rowIndex: number, columnId: keyof any, value: string) => {
+                setCommissionData((data: any[]) => {
+                    const editedData = data.map((row: any, index: number) =>
+                        // tableData = data.map((row: any, index: number) =>
+                        index === rowIndex
+                            ? {
+                                ...data[rowIndex],
+                                [columnId]: Number(value),
+                            }
+                            : row
+                    );
+                    return editedData;
+                });
+            },
+        },
     });
     return (
         <div className="space-y-3">
+            <TableToolbar table={table} globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
             <BasicDataTable table={table} columnsLength={columns.length} isLoading={false} />
             <div className="flex">
                 <DataTablePagination table={table} />

@@ -121,7 +121,7 @@ const CommissionExpenseHeadFilters = ({ getSalesTrip, getYear, searchFilter, set
             </div>
             <div className="flex flex-wrap items-center gap-4">
                 <p className="text-base font-medium">Search</p>
-                <Input className='w-fit' value={searchFilter.search} onChange={(e) => setSearchFilter({ ...searchFilter, search: e.target.value })} />
+                <Input className='w-fit' placeholder='Search' value={searchFilter.search} onChange={(e) => setSearchFilter({ ...searchFilter, search: e.target.value })} />
                 <Button><Search size={18} /></Button>
             </div>
         </div>
