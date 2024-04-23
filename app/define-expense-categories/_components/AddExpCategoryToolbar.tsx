@@ -1,122 +1,80 @@
-import React from 'react'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { SubHeading } from '@/components/Heading';
-import { Textarea } from '@/components/ui/textarea';
-const AddExpCategoryToolbar = ({ form, setForm, setShowDialog }: { form: any, setForm: any, setShowDialog: any }) => {
-
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import React from 'react';
+const AddExpCategoryToolbar = ({ setShowDialog, selectedCategory }: {
+    setShowDialog: any, selectedCategory: {
+        categoryName: string;
+    }
+}) => {
+    const [form, setForm] = React.useState({
+        categoryName: '',
+        subCategoryName: '',
+        expenseType: '',
+    })
     return (
         <Card>
-            <div className='m-4'>
-                <SubHeading text="Add New Expense per Unit" />
-                <div className="flex flex-wrap items-center gap-4 mb-4">
-                    <div className="">
-                        <p className='font-bold font-sans'>Production Category</p>
-                        <Select
-                            value={form?.category}
-                            onValueChange={(value) => {
-                                setForm({ ...form, category: value });
-                            }}
-                        >
-                            <SelectTrigger className="max-w-[200px]">
-                                <SelectValue placeholder="Select Category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-
-                                    <SelectItem value="production_cost_direct" className="flex gap-2">
-                                        Production Cost (Direct)
-                                    </SelectItem>
-                                    <SelectItem value="production_cost_indirect" className="flex gap-2">
-                                        Production Cost (Indirect)
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="">
-                        <p className='font-bold font-sans'>Production Sub-category</p>
-                        <Select
-                            value={form?.subcategory}
-                            onValueChange={(value) => {
-                                setForm({ ...form, subcategory: value });
-                            }}
-                        >
-                            <SelectTrigger className="max-w-[200px]">
-                                <SelectValue placeholder="Select Sub-category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="Sub Category 1" className="flex gap-2">
-                                        Sub Category 1
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                </div>
+            <CardHeader>
+                <CardTitle>Add New Sub-category</CardTitle>
+            </CardHeader>
+            <CardContent>
                 <div className="flex flex-wrap gap-4">
                     <div className="">
-                        <p className='font-bold font-sans'>Sr No.</p>
-                        <Input className="max-w-[200px]" value={form?.srNo} onChange={(e) => {
-                            setForm({ ...form, srNo: e.target.value })
-                        }} placeholder="Sr No" type='number' />
+                        <p className='font-medium'>Category Name</p>
+                        <Input className="min-w-[200px] max-w-[280px]" value={selectedCategory?.categoryName}
+                        />
                     </div>
                     <div className="">
-                        <p className='font-bold font-sans'>Currency</p>
+                        <p className='font-medium'>Sub-category Name</p>
+                        <Input placeholder='Sub-category Name' className="min-w-[200px] max-w-[280px]" value={form?.subCategoryName}
+                            onChange={
+                                (e) => setForm({ ...form, subCategoryName: e.target.value })
+                            }
+                        />
+                    </div>
+                    <div className="">
+                        <p className='font-medium'>Expense Type</p>
                         <Select
-                            value={form?.currency}
+                            value={form?.expenseType}
                             onValueChange={(value) => {
-                                setForm({ ...form, currency: value });
+                                setForm({ ...form, expenseType: value });
                             }}
                         >
-                            <SelectTrigger className="max-w-[200px]">
-                                <SelectValue placeholder="Select Currency" />
+                            <SelectTrigger className="min-w-[200px] max-w-[280px]">
+                                <SelectValue placeholder="Select Expense Type" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectItem value="THB" className="flex gap-2">
-                                        THB
-                                    </SelectItem>
-                                    <SelectItem value="USD" className="flex gap-2">
-                                        USD
+                                    <SelectItem value="Salestrip Expenses" className="flex gap-2">
+                                        Salestrip Expenses
                                     </SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
                     </div>
-                    <div className="">
-                        <p className='font-bold font-sans'>Unit Cost</p>
-                        <Input className="w-fit" value={form?.unitCost} onChange={(e) => {
-                            setForm({ ...form, unitCost: e.target.value })
-
-                        }} placeholder="Unit Cost" type='number' />
-                    </div>
-                    <div className="">
-                        <p className='font-bold font-sans'>Notes</p>
-                        <Textarea className="max-w-[200px]" value={form?.unitCost} onChange={(e) => {
-                            setForm({ ...form, unitCost: e.target.value })
-
-                        }} placeholder="Notes" />
-                    </div>
 
                 </div>
-                <div className="flex gap-4 justify-end mt-4"><Button className='w-[100px]'>Add</Button>
+                <div className="flex gap-4 justify-end mt-4">
                     <Button className='w-[100px]' variant="destructive" onClick={() => {
                         setShowDialog(false)
                         setForm({
-                            category: 'production_cost_direct',
-                            subcategory: '',
-                            srNo: '',
-                            currency: '',
-                            unitCost: ''
+                            categoryName: '',
+                            subCategoryName: '',
+                            expenseType: '',
                         })
 
-                    }}>Cancel</Button></div>
-            </div>
+                    }}>Cancel</Button>
+                    <Button className='w-[100px]' onClick={() => {
+                        setShowDialog(false)
+                        setForm({
+                            ...form,
+                            categoryName: selectedCategory?.categoryName
+                        })
+
+                    }}>Add</Button>
+                </div>
+            </CardContent>
         </Card>
     )
 }

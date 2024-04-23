@@ -26,16 +26,16 @@ export const sidebarData = [
                 link: '',
                 children: [
                     {
-                        title: 'Sales Commission Expense Heads',
-                        link: '/sales-commission-expense-head',
+                        title: 'Define Expense Categories',
+                        link: '/define-expense-categories',
                     },
                     {
                         title: 'Define Production Expense Heads',
                         link: '/define-production-expense',
                     },
                     {
-                        title: 'Define Expense Categories',
-                        link: '/define-expense-categories',
+                        title: 'Sales Commission Expense Heads',
+                        link: '/sales-commission-expense-head',
                     },
                 ],
             },

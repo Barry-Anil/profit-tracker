@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -5,9 +6,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 function ExpenseCategoryCard({ selectedCategory, setSelectedCategory, categoryData }: { selectedCategory: any; setSelectedCategory: any; categoryData: any }) {
     return (
-        <Card className=" overflow-hidden pt-0  w-1/4">
-            <CardHeader className=" p-4">
-                <CardTitle>Expense Categories</CardTitle>
+        <Card className=" overflow-hidden pt-0  w-2/5">
+            <CardHeader>
+                <div className="flex justify-between items-center"> <CardTitle>Expense Categories</CardTitle>
+                    <Button onClick={() => { }}>+New</Button>
+                </div>
             </CardHeader>
 
             {categoryData?.isLoading ? (
@@ -29,17 +32,17 @@ function ExpenseCategoryCard({ selectedCategory, setSelectedCategory, categoryDa
             ) : (
                 <ScrollArea className="h-screen">
                     <CardContent className="flex flex-col gap-4 p-4 hover:cursor-pointer">
-                        {/* {productsData?.data?.data?.success?.[0]?.products?.map((product: ProductData) => (
+                        {categoryData?.map((category: any) => (
                             <div
-                                key={product.id}
-                                className={`w-full text-center font-bold px-4 py-2 rounded-md bg-secondary ${selectedProduct.productName === product.productname && 'outline outline-primary'}`}
+                                key={category?.categoryName}
+                                className={`w-full text-center font-bold px-4 py-2 rounded-md bg-secondary ${selectedCategory.categoryName === category.categoryName && 'outline outline-primary'}`}
                                 onClick={() => {
-                                    setSelectedProduct({ productName: product.productname, productShortName: product.shortname, productId: product.id });
+                                    setSelectedCategory({ categoryName: category?.categoryName });
                                 }}
                             >
-                                {product.productname}
+                                {category.categoryName}
                             </div>
-                        ))} */}
+                        ))}
                     </CardContent>
                 </ScrollArea>
             )}
