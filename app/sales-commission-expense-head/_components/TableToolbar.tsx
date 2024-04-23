@@ -15,18 +15,13 @@ type TableToolbarProps = {
 };
 
 const TableToolbar = ({ table, globalFilter, setGlobalFilter }: TableToolbarProps) => {
-    const tableColumns = [
-        'Fabric Type',
-        'Brand Name',
-        'Fabric Series',
-        'Active'
-    ]
+
     return (
         <div className="flex flex-wrap items-center justify-between py-4 gap-4 w-full">
             <div className="flex flex-wrap items-center gap-2">
                 <DownloadCSVButton table={table} filename={`-order-summary-items.csv`} excludedColumns={['sr_no', 'actions']} />
                 <DownloadPDFButton table={table} filename={`-order-summary-items.pdf`} excludedColumns={['sr_no', 'actions']}
-                    cols={tableColumns} />
+                />
             </div>
             <div className="flex flex-wrap lg:flex-nowrap gap-4 items-center justify-end">
                 <Input placeholder="Search All Columns" value={globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} className="max-w-sm" />

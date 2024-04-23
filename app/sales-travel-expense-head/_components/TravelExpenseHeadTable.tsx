@@ -6,28 +6,20 @@ import { Edit, Save, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import TableToolbar from './TableToolbar';
-import EditableCell from './EditableCell';
 const alternateData: any = [];
 
-type MainOrderTableProps = {
-    comissionDetails: any;
+type TravelExpenseHeadTableProps = {
+    travelExpenseHeadDetails: any;
 };
 
-declare module '@tanstack/react-table' {
-    interface TableMeta<TData extends RowData> {
-        updateCommissionExpenseHead?: (rowIndex: number, columnId: keyof any, value: string) => void;
-    }
-}
+const TravelExpenseHeadTable = ({ travelExpenseHeadDetails }: TravelExpenseHeadTableProps) => {
 
-const CommissionExpenseHeadTable = ({ comissionDetails }: MainOrderTableProps) => {
-    const router = useRouter();
-    console.log(comissionDetails, 'shipTogetherOrders');
+    console.log(travelExpenseHeadDetails, 'shipTogetherOrders');
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
     const [globalFilter, setGlobalFilter] = React.useState('');
-    const [commissionData, setCommissionData] = React.useState(comissionDetails ?? alternateData);
     const columns: ColumnDef<any>[] = [
         {
             id: 'sr_no',
@@ -38,101 +30,102 @@ const CommissionExpenseHeadTable = ({ comissionDetails }: MainOrderTableProps) =
             enableHiding: false,
         },
         {
-            id: 'grouping_name',
-            accessorKey: 'grouping_name',
-            header: 'Grouping Name',
-            cell: ({ row }) => <p className="truncate">{row.original.grouping_name}</p>,
+            id: 'date',
+            accessorKey: 'date',
+            header: 'Date',
+            cell: ({ row }) => <p className="truncate">{row.original.date}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'grouping_place',
-            accessorKey: 'grouping_place',
-            header: 'Grouping Place',
-            cell: ({ row }) => <p className="truncate">{row.original.grouping_place}</p>,
+            id: 'invoice_no',
+            accessorKey: 'invoice_no',
+            header: 'Invoice No',
+            cell: ({ row }) => <p className="truncate">{row.original.invoice_no}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'grouping_host',
-            accessorKey: 'grouping_host',
-            header: 'Grouping Host',
-            cell: ({ row }) => <p className="truncate">{row.original.grouping_host}</p>,
+            id: 'expense_head',
+            accessorKey: 'expense_head',
+            header: 'Expense Head',
+            cell: ({ row }) => <p className="truncate">{row.original.expense_head}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'grouping_event',
-            accessorKey: 'grouping_event',
-            header: 'Grouping Event',
-            cell: ({ row }) => <p className="truncate">{row.original.grouping_event}</p>,
+            id: 'expense_category',
+            accessorKey: 'expense_category',
+            header: 'Expense Category',
+            cell: ({ row }) => <p className="truncate">{row.original.expense_category}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'grouping_fromdate',
-            accessorKey: 'grouping_fromdate',
-            header: 'From Date',
-            cell: ({ row }) => <p className="truncate">{row.original.grouping_fromdate}</p>,
+            id: 'currency',
+            accessorKey: 'currency',
+            header: 'Currency',
+            cell: ({ row }) => <p className="truncate">{row.original.currency}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'grouping_todate',
-            accessorKey: 'grouping_todate',
-            header: 'To Date',
-            cell: ({ row }) => <p className="truncate">{row.original.grouping_todate}</p>,
+            id: 'invoice_amount',
+            accessorKey: 'invoice_amount',
+            header: 'Invoice Amount',
+            cell: ({ row }) => <p className="truncate">{row.original.invoice_amount}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'grouping_status',
-            accessorKey: 'grouping_status',
-            header: 'Grouping Status',
-            cell: ({ row }) => <p className="truncate">{row.original.grouping_status}</p>,
+            id: 'approved_amount',
+            accessorKey: 'approved_amount',
+            header: 'Approved Amount',
+            cell: ({ row }) => <p className="truncate">{row.original.approved_amount}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'grouping_closedate',
-            accessorKey: 'grouping_closedate',
-            header: 'Grouping Close Date',
-            cell: ({ row }) => <p className="truncate">{row.original.grouping_closedate}</p>,
+            id: 'notes',
+            accessorKey: 'notes',
+            header: 'Notes',
+            cell: ({ row }) => <p className="truncate">{row.original.notes}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'host_sales_commision',
-            accessorKey: 'host_sales_commision',
-            header: 'Host Sales Commission',
-            cell: EditableCell,
+            id: 'orderNo',
+            accessorKey: 'orderNo',
+            header: 'Order No',
+            cell: ({ row }) => <p className="truncate">{row.original.orderNo}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'other_host_sales_commision',
-            accessorKey: 'other_host_sales_commision',
-            header: 'Other Host Sales Commission',
-            cell: EditableCell,
+            id: 'salestrip',
+            accessorKey: 'salestrip',
+            header: 'Sales Trip',
+            cell: ({ row }) => <p className="truncate">{row.original.salestrip}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'new_size_meas_commission',
-            accessorKey: 'new_size_meas_commission',
-            header: 'New Size Meas Commission',
-            cell: EditableCell,
+            id: 'grouping',
+            accessorKey: 'grouping',
+            header: 'Grouping',
+            cell: ({ row }) => <p className="truncate">{row.original.grouping}</p>,
             enableSorting: true,
             enableHiding: true,
         },
         {
-            id: 'old_size_meas_commission',
-            accessorKey: 'old_size_meas_commission',
-            header: 'Old Size Meas Commission',
-            cell: EditableCell,
+            id: 'salesperson',
+            accessorKey: 'salesperson',
+            header: 'Salesperson',
+            cell: ({ row }) => <p className="truncate">{row.original.salesperson}</p>,
             enableSorting: true,
             enableHiding: true,
         },
+
         {
             id: 'Action',
             accessorKey: 'Action',
@@ -154,9 +147,8 @@ const CommissionExpenseHeadTable = ({ comissionDetails }: MainOrderTableProps) =
             ),
         },
     ];
-    console.log(commissionData, "this is commission data");;
     const table = useReactTable({
-        data: commissionData,
+        data: travelExpenseHeadDetails ?? alternateData,
         columns,
         state: {
             sorting,
@@ -174,25 +166,10 @@ const CommissionExpenseHeadTable = ({ comissionDetails }: MainOrderTableProps) =
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        meta: {
-            updateCommissionExpenseHead: (rowIndex: number, columnId: keyof any, value: string) => {
-                setCommissionData((data: any[]) => {
-                    const editedData = data.map((row: any, index: number) =>
-                        // tableData = data.map((row: any, index: number) =>
-                        index === rowIndex
-                            ? {
-                                ...data[rowIndex],
-                                [columnId]: Number(value),
-                            }
-                            : row
-                    );
-                    return editedData;
-                });
-            },
-        },
+
     });
     return (
-        <div className="space-y-3">
+        <div className="space-y-2">
             <TableToolbar table={table} globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
             <BasicDataTable table={table} columnsLength={columns.length} isLoading={false} />
             <div className="flex">
@@ -202,4 +179,4 @@ const CommissionExpenseHeadTable = ({ comissionDetails }: MainOrderTableProps) =
     );
 };
 
-export default CommissionExpenseHeadTable;
+export default TravelExpenseHeadTable;

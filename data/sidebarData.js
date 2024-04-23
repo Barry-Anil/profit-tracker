@@ -12,13 +12,51 @@ export const sidebarData = [
                         title: 'Home',
                         link: '/',
                     },
+                ],
+            },
+        ],
+    },
+    {
+        heading: '',
+        children: [
+            {
+                title: 'Master Screens',
+                value: 'master',
+                icon: 'PencilRuler',
+                link: '',
+                children: [
                     {
                         title: 'Sales Commission Expense Heads',
                         link: '/sales-commission-expense-head',
                     },
                     {
-                        title: 'Define Production Expense',
+                        title: 'Define Production Expense Heads',
                         link: '/define-production-expense',
+                    },
+                    {
+                        title: 'Define Expense Categories',
+                        link: '/define-expense-categories',
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        heading: '',
+        children: [
+            {
+                title: 'Transaction Screens',
+                value: 'transaction',
+                icon: 'ArrowDownUp',
+                link: '',
+                children: [
+                    {
+                        title: 'Sales Travel Expense Heads',
+                        link: '/sales-travel-expense-head',
+                    },
+                    {
+                        title: 'Sales Marketing Expense Heads',
+                        link: '/sales-marketing-expense-head',
                     },
                 ],
             },

@@ -10,7 +10,7 @@ import Dropdown from '../Dropdown';
 import useThemeConfigStore from '@/store/themeConfig';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { Calendar, ChevronDownIcon, ChevronRightIcon, DollarSign, File, Home, Inbox, LayoutGrid, Lock, LogOut, Menu, Moon, PencilRuler, Sun, User, UserRoundCog } from 'lucide-react';
+import { ArrowDownUp, Calendar, ChevronDownIcon, ChevronRightIcon, DollarSign, File, Home, Inbox, LayoutGrid, Lock, LogOut, Menu, Moon, PencilRuler, Sun, User, UserRoundCog } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { sidebarData } from '@/data/sidebarData';
 import { Button } from '@/components/ui/button';
@@ -75,6 +75,7 @@ const Header = () => {
         File: <File className="h-4 w-4" />,
         UserRoundCog: <UserRoundCog className="h-4 w-4" />,
         PencilRuler: <PencilRuler className="h-4 w-4" />,
+        ArrowDownUp: <ArrowDownUp className="h-4 w-4" />,
     };
     return (
         <header className={`z-40 ${themeConfig.semidark && themeConfig.menu === 'horizontal' ? 'dark' : ''}`}>

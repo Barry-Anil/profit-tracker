@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import useThemeConfigStore from '@/store/themeConfig';
-import { Calendar, ChevronFirst, ChevronRight, DollarSign, File, Home, PencilRuler, UserRoundCog } from 'lucide-react';
+import { ArrowDownUp, Calendar, ChevronFirst, ChevronRight, DollarSign, File, Home, PencilRuler, UserRoundCog } from 'lucide-react';
 import { sidebarData } from '../../data/sidebarData';
 
 const Sidebar = () => {
@@ -71,6 +71,7 @@ const Sidebar = () => {
         File: <File className="h-4 w-4" />,
         UserRoundCog: <UserRoundCog className="h-4 w-4" />,
         PencilRuler: <PencilRuler className="h-4 w-4" />,
+        ArrowDownUp: <ArrowDownUp className="h-4 w-4" />,
     };
 
     return (

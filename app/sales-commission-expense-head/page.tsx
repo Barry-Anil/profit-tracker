@@ -3,6 +3,8 @@ import { useGetSalesTrip, useGetYear } from '@/hooks';
 import React from 'react'
 import CommissionExpenseHeadFilters from './_components/CommissionExpenseHeadFilters';
 import CommissionExpenseHeadTable from './_components/CommissionExpenseHeadTable';
+import { Heading } from '@/components/Heading';
+
 const sampleData = [
     {
         grouping_name: "Group A",
@@ -40,6 +42,7 @@ const page = () => {
     console.log(searchFilter);
     return (
         <div>
+            <Heading text="Sales Commission Expense Head" />
             <CommissionExpenseHeadFilters getSalesTrip={getSalesTrip} getYear={getYear} searchFilter={searchFilter} setSearchFilter={setSearchFilter} />
             <div className="my-4"> <CommissionExpenseHeadTable comissionDetails={sampleData} /></div>
         </div>

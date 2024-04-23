@@ -25,57 +25,62 @@ const CommissionExpenseHeadFilters = ({ getSalesTrip, getYear, searchFilter, set
     return (
         <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-4">
-                <p className="text-base font-medium">Select Year</p>
-                <Select
-                    value={searchFilter?.year || '2024'}
-                    onValueChange={(value) => {
-                        setSearchFilter({ ...searchFilter, year: value });
-                    }}
-                >
-                    <SelectTrigger className="max-w-[200px]">
-                        <SelectValue placeholder="Select Supplier" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            {getYear &&
-                                getYear?.data?.map((item: Year) => (
-                                    <SelectItem key={item.year} value={String(item.year)} className="flex gap-2">
-                                        {item.year}
-                                    </SelectItem>
-                                ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-                <p className="text-base font-medium">Select Sales Trip</p>
-                <Select
-                    value={searchFilter?.salestrip || ''}
-                    onValueChange={(value) => {
-                        setSearchFilter({ ...searchFilter, salestrip: value });
-                    }}
-                >
-                    <SelectTrigger className="max-w-[200px]">
-                        <SelectValue placeholder="Select Supplier" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            {filteredData &&
-                                filteredData?.map((item: SalesTrip) => (
-                                    <SelectItem key={item.salestrip_name} value={item.salestrip_name} className="flex gap-2">
-                                        {item.salestrip_name}
-                                    </SelectItem>
-                                ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-                {searchFilter?.salestrip && (
-                    <Button
-                        variant="outline"
-                        onClick={() => {
-                            setSearchFilter({ year: '2024', salestrip: '', search: '' });
+                <div><p className="font-medium">Select Year</p>
+                    <Select
+                        value={searchFilter?.year || '2024'}
+                        onValueChange={(value) => {
+                            setSearchFilter({ ...searchFilter, year: value });
                         }}
                     >
-                        Clear Sales Trip
-                    </Button>
+                        <SelectTrigger className="w-[200px]">
+                            <SelectValue placeholder="Select Supplier" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                {getYear &&
+                                    getYear?.data?.map((item: Year) => (
+                                        <SelectItem key={item.year} value={String(item.year)} className="flex gap-2">
+                                            {item.year}
+                                        </SelectItem>
+                                    ))}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select></div>
+                <div>
+                    <p className="font-medium">Select Sales Trip</p>
+                    <Select
+                        value={searchFilter?.salestrip || ''}
+                        onValueChange={(value) => {
+                            setSearchFilter({ ...searchFilter, salestrip: value });
+                        }}
+                    >
+                        <SelectTrigger className="min-w-[200px] max-w-[280px]">
+                            <SelectValue placeholder="Select Supplier" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                {filteredData &&
+                                    filteredData?.map((item: SalesTrip) => (
+                                        <SelectItem key={item.salestrip_name} value={item.salestrip_name} className="flex gap-2">
+                                            {item.salestrip_name}
+                                        </SelectItem>
+                                    ))}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                {searchFilter?.salestrip && (
+                    <div>
+                        <p>&nbsp;</p>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setSearchFilter({ year: '2024', salestrip: '', search: '' });
+                            }}
+                        >
+                            Clear Sales Trip
+                        </Button>
+                    </div>
                 )}
                 {/* {salestrip && (
                     <>
@@ -120,9 +125,14 @@ const CommissionExpenseHeadFilters = ({ getSalesTrip, getYear, searchFilter, set
                 )} */}
             </div>
             <div className="flex flex-wrap items-center gap-4">
-                <p className="text-base font-medium">Search</p>
-                <Input className='w-fit' placeholder='Search' value={searchFilter.search} onChange={(e) => setSearchFilter({ ...searchFilter, search: e.target.value })} />
-                <Button><Search size={18} /></Button>
+                <div>
+                    <p className="font-medium">Search Grouping</p>
+                    <Input className='w-fit' placeholder='Search' value={searchFilter.search} onChange={(e) => setSearchFilter({ ...searchFilter, search: e.target.value })} />
+                </div>
+                <div>
+                    <p className="font-medium">&nbsp;</p>
+                    <Button><Search size={18} /></Button>
+                </div>
             </div>
         </div>
     );
