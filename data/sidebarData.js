@@ -34,6 +34,10 @@ export const sidebarData = [
                         link: '/define-production-expense',
                     },
                     {
+                        title: 'Define Shipping Cost',
+                        link: '/define-shipping-cost-per-product',
+                    },
+                    {
                         title: 'Sales Commission Expense Heads',
                         link: '/sales-commission-expense-head',
                     },

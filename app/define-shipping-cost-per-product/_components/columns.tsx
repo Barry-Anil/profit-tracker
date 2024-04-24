@@ -1,8 +1,5 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
-import { Trash2 } from 'lucide-react';
-export function costingColumns() {
+export function ShippingCostColumns() {
     const columns: ColumnDef<any>[] = [
         {
             id: 'sr_no',
@@ -28,6 +25,11 @@ export function costingColumns() {
             cell: ({ row }) => <p className="truncate">{row.getValue('subcategory_name') ?? 'NA'}</p>,
         },
         {
+            accessorKey: 'weight',
+            header: 'Weight (Kg)',
+            cell: ({ row }) => <p className="truncate">{row.getValue('weight') ?? 'NA'}</p>,
+        },
+        {
             accessorKey: 'currency',
             header: 'Currency',
             cell: ({ row }) => <p className="truncate">{row.getValue('currency') ?? 'NA'}</p>,
@@ -41,9 +43,9 @@ export function costingColumns() {
             },
         },
         {
-            accessorKey: 'notes',
-            header: 'Notes',
-            cell: ({ row }) => <p className="truncate">{row.getValue('notes') ?? 'NA'}</p>,
+            accessorKey: 'narration',
+            header: 'Narration',
+            cell: ({ row }) => <p className="truncate">{row.getValue('narration') ?? 'NA'}</p>,
         },
 
     ];

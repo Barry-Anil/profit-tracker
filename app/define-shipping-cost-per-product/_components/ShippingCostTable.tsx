@@ -5,19 +5,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ColumnFiltersState, SortingState, VisibilityState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { Loader } from 'lucide-react';
 import TableToolbar from './TableToolbar';
-import { costingColumns } from './columns';
+import { ShippingCostColumns } from './columns';
 import BasicDataTable from '@/components/BasicDataTable';
 const alternateData: any = [];
-const CostingTable = ({ expenseData }: any) => {
-    const columns = costingColumns();
+const ShippingCostTable = ({ shippingCostData }: any) => {
+    const columns = ShippingCostColumns();
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
     const [globalFilter, setGlobalFilter] = React.useState('');
-    // const tableData = expenseData?.data?.success?.[0]?.fabric_type?.sort((a: any, b: any) => a.sortorder - b.sortorder) ?? alternateData;
+    // const tableData = shippingCostData?.data?.success?.[0]?.fabric_type?.sort((a: any, b: any) => a.sortorder - b.sortorder) ?? alternateData;
     const table = useReactTable({
-        data: expenseData,
+        data: shippingCostData,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -48,4 +48,4 @@ const CostingTable = ({ expenseData }: any) => {
     );
 };
 
-export default CostingTable;
+export default ShippingCostTable;

@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect } from 'react'
 import ProductsCard from './ProductsCard'
-import FabricTypesCard from './FabricTypesCard'
+import ProductionExpenseCard from './ProductionExpenseCard'
 import useGetAllProducts from '@/hooks/products';
 
 const Wrapper = () => {
@@ -34,7 +34,7 @@ const Wrapper = () => {
     return (
         <div className='flex gap-4 w-full'>
             <ProductsCard selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} productsData={fetchAllProducts} />
-            <FabricTypesCard selectedProduct={selectedProduct} expenseData={sampleData} />
+            <ProductionExpenseCard selectedProduct={selectedProduct} expenseData={sampleData} />
         </div>
     )
 }

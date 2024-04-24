@@ -1,17 +1,16 @@
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 
 
-function ExpenseCategoryCard({ selectedCategory, setSelectedCategory, categoryData }: { selectedCategory: any; setSelectedCategory: any; categoryData: any }) {
+function SalesTripListCard({ selectedSalesTrip, setSelectedSalesTrip, salestripData }: { selectedSalesTrip: any; setSelectedSalesTrip: any; salestripData: any }) {
     return (
-        <Card className=" overflow-hidden pt-0  w-2/5">
-            <CardHeader>
-                <CardTitle>Expense Categories</CardTitle>
+        <Card className=" overflow-hidden pt-0  w-1/4">
+            <CardHeader className=" p-4">
+                <CardTitle>Select Salestrip</CardTitle>
             </CardHeader>
 
-            {categoryData?.isLoading ? (
+            {salestripData?.isLoading ? (
                 <CardContent className="flex flex-col gap-4 p-4 w-full ">
                     {Array.from({ length: 12 }, (_, i) => (
                         <Card key={i}>
@@ -30,15 +29,15 @@ function ExpenseCategoryCard({ selectedCategory, setSelectedCategory, categoryDa
             ) : (
                 <ScrollArea className="h-screen">
                     <CardContent className="flex flex-col gap-4 p-4 hover:cursor-pointer">
-                        {categoryData?.map((category: any) => (
+                        {salestripData?.map((salestrip: any) => (
                             <div
-                                key={category?.categoryName}
-                                className={`w-full text-center font-bold px-4 py-2 rounded-md bg-secondary ${selectedCategory.categoryName === category.categoryName && 'outline outline-primary'}`}
+                                key={salestrip.id}
+                                className={`w-full text-center font-bold px-4 py-2 rounded-md bg-secondary ${selectedSalesTrip?.salestrip_name === salestrip?.salestrip_name && 'outline outline-primary'}`}
                                 onClick={() => {
-                                    setSelectedCategory({ categoryName: category?.categoryName });
+                                    setSelectedSalesTrip({ salestrip_name: salestrip?.salestrip_name, });
                                 }}
                             >
-                                {category.categoryName}
+                                {salestrip?.salestrip_name}
                             </div>
                         ))}
                     </CardContent>
@@ -48,4 +47,4 @@ function ExpenseCategoryCard({ selectedCategory, setSelectedCategory, categoryDa
     );
 }
 
-export default ExpenseCategoryCard;
+export default SalesTripListCard;
