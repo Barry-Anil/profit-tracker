@@ -19,8 +19,8 @@ const TableToolbar = ({ table, globalFilter, setGlobalFilter }: TableToolbarProp
     return (
         <div className="flex flex-wrap items-center justify-between py-4 gap-4 w-full">
             <div className="flex flex-wrap items-center gap-2">
-                <DownloadCSVButton table={table} filename={`-order-summary-items.csv`} excludedColumns={['sr_no', 'actions']} />
-                <DownloadPDFButton table={table} filename={`-order-summary-items.pdf`} excludedColumns={['sr_no', 'actions']}
+                <DownloadCSVButton table={table} filename={`-order-summary-items.csv`} excludedColumns={['sr_no', 'action']} />
+                <DownloadPDFButton table={table} filename={`-order-summary-items.pdf`} excludedColumns={['sr_no', 'action']}
                 />
             </div>
             <div className="flex flex-wrap lg:flex-nowrap gap-4 items-center justify-end">

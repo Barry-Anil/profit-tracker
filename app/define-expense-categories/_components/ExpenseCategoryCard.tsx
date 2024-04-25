@@ -3,16 +3,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 
+function ExpenseCategoryCard({ selectedCategory, setSelectedCategory, categoryData }: {
+    selectedCategory: {
+        categoryName: string;
+        categoryType: string;
+    }; setSelectedCategory: any; categoryData: any
+}) {
 
-function ExpenseCategoryCard({ selectedCategory, setSelectedCategory, categoryData }: { selectedCategory: any; setSelectedCategory: any; categoryData: any }) {
+    const data = categoryData?.data?.data?.category_names ?? []
     return (
         <Card className="overflow-hidden pt-0  w-1/4">
-            <CardHeader className='p-4'>
-                <div className='flex justify-between' >
-                    <CardTitle>Categories</CardTitle>
-
-                    <Button className='w-fit'>+New</Button>
-                </div>
+            <CardHeader className="p-4">
+                <CardTitle>Categories</CardTitle>
             </CardHeader>
 
             {
@@ -35,22 +37,22 @@ function ExpenseCategoryCard({ selectedCategory, setSelectedCategory, categoryDa
                 ) : (
                     <ScrollArea className="h-screen">
                         <CardContent className="flex flex-col gap-4 p-4 hover:cursor-pointer">
-                            {categoryData?.map((category: any) => (
+                            {data?.map((category: any) => (
                                 <div
-                                    key={category?.categoryName}
-                                    className={`w-full text-center font-bold px-4 py-2 rounded-md bg-secondary ${selectedCategory.categoryName === category.categoryName && 'outline outline-primary'}`}
+                                    key={category?.category_name}
+                                    className={`w-full text-center font-bold px-4 py-2 rounded-md bg-secondary ${selectedCategory.categoryName === category.category_name && 'outline outline-primary'}`}
                                     onClick={() => {
-                                        setSelectedCategory({ categoryName: category?.categoryName });
+                                        setSelectedCategory({ categoryName: category?.category_name });
                                     }}
                                 >
-                                    {category.categoryName}
+                                    {category.category_name}
                                 </div>
                             ))}
                         </CardContent>
                     </ScrollArea>
                 )
             }
-        </Card >
+        </Card>
     );
 }
 

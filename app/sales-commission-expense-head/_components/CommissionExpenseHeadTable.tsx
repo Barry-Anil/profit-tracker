@@ -4,12 +4,13 @@ import { Button } from '@/components/ui/button';
 import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, RowData } from '@tanstack/react-table';
 import { Edit, Save, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import TableToolbar from './TableToolbar';
 import EditableCell from './EditableCell';
 const alternateData: any = [];
 
 type MainOrderTableProps = {
+    year: string;
     comissionDetails: any;
 };
 
@@ -19,15 +20,19 @@ declare module '@tanstack/react-table' {
     }
 }
 
-const CommissionExpenseHeadTable = ({ comissionDetails }: MainOrderTableProps) => {
-    const router = useRouter();
-    console.log(comissionDetails, 'shipTogetherOrders');
+const CommissionExpenseHeadTable = ({ year, comissionDetails }: MainOrderTableProps) => {
+    console.log(comissionDetails?.data?.data, 'commission details');
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
     const [globalFilter, setGlobalFilter] = React.useState('');
-    const [commissionData, setCommissionData] = React.useState(comissionDetails ?? alternateData);
+    const [commissionData, setCommissionData] = React.useState(comissionDetails?.data?.data ?? alternateData);
+
+    useEffect(() => {
+        setCommissionData(comissionDetails?.data?.data ?? alternateData);
+    }, [year, comissionDetails?.data?.data]);
+
     const columns: ColumnDef<any>[] = [
         {
             id: 'sr_no',
@@ -194,7 +199,7 @@ const CommissionExpenseHeadTable = ({ comissionDetails }: MainOrderTableProps) =
     return (
         <div className="space-y-3">
             <TableToolbar table={table} globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
-            <BasicDataTable table={table} columnsLength={columns.length} isLoading={false} />
+            <BasicDataTable table={table} columnsLength={columns.length} isLoading={comissionDetails.isFetching} />
             <div className="flex">
                 <DataTablePagination table={table} />
             </div>

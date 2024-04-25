@@ -3,14 +3,14 @@ import axios from 'axios';
 import { useSession } from 'next-auth/react';
 
 interface DataProviderProps {
-    queryKey: string;
+    querykey: any;
     endpoint: string;
     enabled?: boolean;
     utilityFunction?: any;
 }
 
 const useDataProvider = ({
-    queryKey,
+    querykey,
     endpoint,
     enabled,
     utilityFunction
@@ -40,7 +40,7 @@ const useDataProvider = ({
 
     return useQuery({
         queryFn: fetch,
-        queryKey: [`${queryKey}`],
+        queryKey: querykey,
         enabled: enabled ?? true,
         retry: 2,
     });
