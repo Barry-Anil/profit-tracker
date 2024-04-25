@@ -8,10 +8,13 @@ import {
     SelectTrigger,
     SelectValue
 } from '@/components/ui/select';
-import { useGetSalesTrip, useGetYear } from '@/hooks';
+// import { useGetSalesTrip, useGetYear } from '@/hooks';
+import useGetSalesTrip from '@/hooks/salesTrip/useGetSalesTrip';
+import useGetYear from '@/hooks/Years/useGetYear';
 import React, { useEffect } from 'react';
 import SalesTripListCard from './_components/SalesTripListCard';
 import ShippingCostCard from './_components/ShippingCostCard';
+import useGetSalesTripRust from '@/hooks/salesTrip/useGetSalesTripRust';
 
 const DefineShippingCostPerProduct = () => {
     const [year, setYear] = React.useState('2024');

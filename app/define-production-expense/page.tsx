@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import Wrapper from './_components/Wrapper'
 import { Heading } from '@/components/Heading'

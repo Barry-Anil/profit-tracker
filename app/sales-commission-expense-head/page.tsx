@@ -1,5 +1,6 @@
 'use client'
-import { useGetSalesTrip, useGetYear } from '@/hooks';
+import useGetSalesTrip from '@/hooks/salesTrip/useGetSalesTrip';
+import useGetYear from '@/hooks/Years/useGetYear';
 import React from 'react'
 import CommissionExpenseHeadFilters from './_components/CommissionExpenseHeadFilters';
 import CommissionExpenseHeadTable from './_components/CommissionExpenseHeadTable';

@@ -23,7 +23,7 @@ const ExpenseCategoryInfoCard = ({ selectedCategory, expenseData }: {
                 <div>
                     {!showDialog && <Button onClick={() => {
                         setShowDialog(true)
-                    }}>+Add New Sub-category
+                    }}>+New Sub-category
                     </Button>}
                 </div>
             </CardHeader>
