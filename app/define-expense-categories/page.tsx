@@ -12,7 +12,7 @@ const DefineExpenseCategories = () => {
     })
 
     const getCategories = useDataProvider({
-        querykey: 'expenseCategoryData',
+        querykey: ['expenseCategoryData'],
         endpoint: 'api/expense/category/all',
         utilityFunction: (res: any) => {
             console.log(res)

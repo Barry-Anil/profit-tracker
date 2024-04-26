@@ -8,7 +8,7 @@ const page = () => {
 
     const [products, setProducts] = React.useState([])
     const getProducts = useDataProvider({
-        queryKey: 'allProductsThroughMasterData',
+        querykey: ['allProductsThroughMasterData'],
         endpoint: 'api/fabric-types/products',
         enabled: false,
         utilityFunction: (res: any) => {

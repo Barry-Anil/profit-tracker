@@ -12,7 +12,7 @@ const Wrapper = () => {
     })
 
     const fetchAllProducts = useDataProvider({
-        querykey: 'all-products-dp',
+        querykey: ['all-products-dp'],
         endpoint: 'api/fabric-types/products',
         utilityFunction: (res: any) => {
             console.log(res?.data);
