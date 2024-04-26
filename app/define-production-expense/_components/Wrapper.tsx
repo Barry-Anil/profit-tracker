@@ -1,9 +1,8 @@
 'use client';
-import React, { useEffect } from 'react'
-import ProductsCard from './ProductsCard'
-import ProductionExpenseCard from './ProductionExpenseCard'
-import useGetAllProducts from '@/hooks/products';
 import useDataProvider from '@/hooks/useDataProvider';
+import React from 'react';
+import ProductionExpenseCard from './ProductionExpenseCard';
+import ProductsCard from './ProductsCard';
 
 const Wrapper = () => {
     const [selectedProduct, setSelectedProduct] = React.useState({
@@ -13,7 +12,7 @@ const Wrapper = () => {
     })
 
     const fetchAllProducts = useDataProvider({
-        queryKey: 'all-products-dp',
+        querykey: 'all-products-dp',
         endpoint: 'api/fabric-types/products',
         utilityFunction: (res: any) => {
             console.log(res?.data);

@@ -22,7 +22,6 @@ const EditableCell = ({ getValue, row, column, table }: EditableCellProps) => {
     useEffect(() => {
         setValue(initialValue);
     }, [initialValue]);
-
     return (
         <div className="flex gap-2 w-full">
             <Input type='number' value={value} onChange={(e) => setValue(e.target.value)} onBlur={onBlur} />
