@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon, Search } from 'lucide-react';
 import React from 'react';
-import { useGetSalesTrip, useGetYear } from '@/hooks';
 
 const TravelExpenseHeadsFilter = () => {
 

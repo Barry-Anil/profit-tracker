@@ -1,11 +1,12 @@
 'use client';
 import React from 'react';
 import TravelExpenseHeadForm from './_components/TravelExpenseHeadForm';
-import { useGetSalesTrip, useGetYear } from '@/hooks';
 import TravelExpenseHeadsFilter from './_components/TravelExpenseHeadsFilter';
 import { Button } from '@/components/ui/button';
 import TravelExpenseHeadTable from './_components/TravelExpenseHeadTable';
 import { Heading } from '@/components/Heading';
+import useGetSalesTrip from '@/hooks/salesTrip/useGetSalesTrip';
+import useGetYear from '@/hooks/Years/useGetYear';
 const travelExpSampleData = [
     {
         "sr_no": 1,
