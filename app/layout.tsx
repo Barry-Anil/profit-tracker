@@ -17,6 +17,14 @@ export const metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" className={`${GeistSans.variable}`}>
+            <head>
+                <link
+                    rel="icon"
+                    href="/icon?<generated>"
+                    type="image/<generated>"
+                    sizes="<generated>"
+                />
+            </head>
             <body className='bg-gray-50 dark:bg-black'>
                 <ReduxProvider>
                     <Providers attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
