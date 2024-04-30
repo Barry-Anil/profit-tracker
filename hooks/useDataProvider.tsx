@@ -1,3 +1,4 @@
+import useClientSession from '@/store/session';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
@@ -16,6 +17,8 @@ const useDataProvider = ({
     utilityFunction
 }: DataProviderProps) => {
     const { data: session } = useSession();
+
+    const { setData } = useClientSession()
     const fetch = async () => {
         const baseURL = `${process.env.NEXT_PUBLIC_API_URL?.concat(endpoint)}`;
         const headers = {
@@ -29,10 +32,11 @@ const useDataProvider = ({
             utilityFunction && utilityFunction(res);
         }
         else {
-            // setData(() => ({
-            //     clientSession: true
-            // })
-            // )
+            console.log('it came here');
+            setData(() => ({
+                clientSession: true
+            })
+            )
             console.log(res?.data?.apiresponse)
         }
         return res;

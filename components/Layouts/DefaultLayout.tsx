@@ -12,6 +12,7 @@ import Footer from './Footer';
 import Header from './Header';
 import Setting from './Setting';
 import Sidebar from './Sidebar';
+import SessionExpiryModal from './SessionExpiryModal';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const { status, data } = useSession();
@@ -113,6 +114,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                                 {/* END TOP NAVBAR */}
 
                                 {/* BEGIN CONTENT AREA */}
+                                <SessionExpiryModal />
                                 <div className={`${animation} animate__animated p-6`}>{children}</div>
                                 {/* END CONTENT AREA */}
 
