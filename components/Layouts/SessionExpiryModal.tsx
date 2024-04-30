@@ -32,10 +32,11 @@ const SessionExpiryModal = () => {
 
                 <DialogFooter>
                     <Button type="submit" onClick={() => {
-                        signIn('azure-ad');
-                        setData(() => ({
-                            clientSession: false,
-                        }));
+                        signIn('azure-ad').then(() => {
+                            setData(() => ({
+                                clientSession: false,
+                            }));
+                        });
                     }}>Login using Azure AD &nbsp; <ArrowRight size={16} /></Button>
                 </DialogFooter>
             </DialogContent>

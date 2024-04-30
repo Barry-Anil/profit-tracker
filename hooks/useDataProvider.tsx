@@ -29,15 +29,16 @@ const useDataProvider = ({
         const res = await axios.get(baseURL, { headers });
 
         if (res?.data?.apiresponse === "success" && res?.data?.success?.[0]?.code === 200) {
+            setData(() => ({
+                clientSession: false
+            }))
             utilityFunction && utilityFunction(res);
         }
-        else {
-            console.log('it came here');
+        if (res?.data?.apiresponse === "error" && res?.data?.error?.[0]?.code === 403 && res?.data?.error?.[0]?.token_status === "expired") {
             setData(() => ({
                 clientSession: true
             })
             )
-            console.log(res?.data?.apiresponse)
         }
         return res;
     };
