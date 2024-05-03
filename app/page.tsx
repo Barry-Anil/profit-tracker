@@ -1,6 +1,4 @@
 import { auth } from '@/auth';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 const SalesCommissionExpenseHead = async () => {
@@ -8,8 +6,6 @@ const SalesCommissionExpenseHead = async () => {
     if (!session?.user) {
         redirect('/login');
     }
-    const a;
-    const b;
     // testing auto deployment
     return (
         <div className="flex flex-col gap-2 container">

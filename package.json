@@ -99,7 +99,7 @@
     "lint-staged": {
         "app/**/*.{js,jsx,ts,tsx}": [
             "prettier --write",
-            "eslint --config .eslintrc.js"
+            "eslint  --config .eslintrc.js --fix"
         ]
     }
 }
