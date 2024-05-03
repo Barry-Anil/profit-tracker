@@ -6,7 +6,7 @@ import { Heading } from '@/components/Heading'
 function DefineProductionExpense() {
     return (
         <div>
-            <Heading text="Define Production Expense" />
+
             <Wrapper /></div>
     )
 }

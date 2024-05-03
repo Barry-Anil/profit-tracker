@@ -4,8 +4,11 @@ import React, { useEffect } from 'react'
 import ExpenseCategoryCard from './_components/ExpenseCategoryCard'
 import ExpenseCategoryInfoCard from './_components/ExpenseCategoryInfoCard'
 import useDataProvider from '@/hooks/useDataProvider'
+import { Button } from '@/components/ui/button'
+import AddExpCategoryToolbar from './_components/AddExpCategoryToolbar'
 
 const DefineExpenseCategories = () => {
+    const [showDialog, setShowDialog] = React.useState(false)
     const [selectedCategory, setSelectedCategory] = React.useState({
         categoryName: '',
         categoryType: '',
@@ -30,7 +33,16 @@ const DefineExpenseCategories = () => {
 
     return (
         <>
-            <Heading text="Define Expense Categories" />
+            <div className="flex justify-between mb-4 items-center">
+                <Heading text="Define Expense Categories" />
+                <div>
+                    {!showDialog && <Button onClick={() => {
+                        setShowDialog(true)
+                    }}>+Add New
+                    </Button>}
+                </div>
+            </div>
+            {showDialog && <AddExpCategoryToolbar selectedCategory={selectedCategory} setShowDialog={setShowDialog} refetchCategoryData={getCategories} />}
 
             <div className='flex gap-4 w-full'>
                 <ExpenseCategoryCard selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categoryData={getCategories} />

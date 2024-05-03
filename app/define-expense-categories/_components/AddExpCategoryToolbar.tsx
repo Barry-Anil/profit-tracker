@@ -31,7 +31,7 @@ const AddExpCategoryToolbar = ({
     const postCategoryData = usePostProvider();
 
     return (
-        <Card>
+        <Card className='mb-4'>
             <CardHeader>
                 <div>
                     <RadioGroup defaultValue="newsubcategory" className="flex gap-8 items-center">
@@ -144,7 +144,7 @@ const AddExpCategoryToolbar = ({
                                             sortorder: 0,
                                         });
                                         // setShowDialog(false);
-                                        refetchCategoryData()
+                                        refetchCategoryData.refetch();
                                     },
                                     onError: (error) => {
                                         toast.error('Error Adding Category');
@@ -165,8 +165,7 @@ const AddExpCategoryToolbar = ({
 export default AddExpCategoryToolbar;
 
 const expenseTypes = [
-    { name: 'Salestrip Expenses', id: 'ST' },
-    { name: 'Product Expenses', id: 'PR' },
+    { name: 'Operational Cost', id: 'OC' },
     { name: 'Factory', id: 'F' },
     { name: 'Office Staff', id: 'OS' },
     { name: 'Shipping', id: 'SH' },

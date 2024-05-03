@@ -13,7 +13,6 @@ interface ProductData {
     ssonline_sortorder: number;
 }
 function ProductsCard({ selectedProduct, setSelectedProduct, productsData }: { selectedProduct: any; setSelectedProduct: any; productsData: any }) {
-    console.log(productsData?.data?.data?.success?.[0]?.products);
     return (
         <Card className=" overflow-hidden pt-0  w-1/4">
             <CardHeader className=" p-4">

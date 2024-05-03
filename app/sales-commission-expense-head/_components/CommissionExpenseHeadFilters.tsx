@@ -33,7 +33,7 @@ const CommissionExpenseHeadFilters = ({ getSalesTrip, getYear, searchFilter, set
                         }}
                     >
                         <SelectTrigger className="w-[200px]">
-                            <SelectValue placeholder="Select Supplier" />
+                            <SelectValue placeholder="Select Salestrip" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
