@@ -8,6 +8,7 @@ const SalesCommissionExpenseHead = async () => {
     if (!session?.user) {
         redirect('/login');
     }
+    const a;
     // testing auto deployment
     return (
         <div className="flex flex-col gap-2 container">
