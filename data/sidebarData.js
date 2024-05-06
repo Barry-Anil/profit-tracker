@@ -20,8 +20,8 @@ export const sidebarData = [
         heading: '',
         children: [
             {
-                title: 'Master Screens',
-                value: 'master',
+                title: 'Expense Heads',
+                value: 'expenseheads',
                 icon: 'PencilRuler',
                 link: '',
                 children: [

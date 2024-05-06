@@ -90,11 +90,16 @@ const AddExpCategoryToolbar = ({
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    {data.map((type: { expense_type_name: string; expense_type: string }) => (
+                                    {expenseTypes.map((type: { name: string; id: string }) => (
+                                        <SelectItem key={type?.id} value={type?.id} className="flex gap-2">
+                                            {type?.name}
+                                        </SelectItem>
+                                    ))}
+                                    {/* {data.map((type: { expense_type_name: string; expense_type: string }) => (
                                         <SelectItem key={type?.expense_type} value={type?.expense_type} className="flex gap-2">
                                             {type?.expense_type_name}
                                         </SelectItem>
-                                    ))}
+                                    ))} */}
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -165,7 +170,7 @@ const AddExpCategoryToolbar = ({
 export default AddExpCategoryToolbar;
 
 const expenseTypes = [
-    { name: 'Operational Cost', id: 'OC' },
+    { name: 'Production', id: 'PR' },
     { name: 'Factory', id: 'F' },
     { name: 'Office Staff', id: 'OS' },
     { name: 'Shipping', id: 'SH' },
