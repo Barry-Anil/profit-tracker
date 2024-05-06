@@ -53,7 +53,7 @@ const SalesTravellExpenseHead = () => {
     const getYear = useGetYear();
     return (
         <div>
-            <Heading text="Sales Travel Expense Head" />
+            <Heading text="Sales Travel Expense" />
             <div className="flex items-center justify-between">
                 <TravelExpenseHeadsFilter />
                 <div className="flex flex-col">
