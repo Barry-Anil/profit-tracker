@@ -23,21 +23,7 @@ const travelExpSampleData = [
         "grouping": "Sales",
         "salesperson": "John Doe"
     },
-    {
-        "sr_no": 2,
-        "date": "2024-04-05",
-        "invoice_no": "INV002",
-        "expense_head": "Meals",
-        "expense_category": "Client Entertainment",
-        "currency": "USD",
-        "invoice_amount": 200,
-        "approved_amount": 180,
-        "notes": "Dinner with potential clients",
-        "orderNo": "ORD124",
-        "salestrip": "Client Dinner Event",
-        "grouping": "Marketing",
-        "salesperson": "Jane Smith"
-    }
+
 ]
 
 const SalesTravellExpenseHead = () => {
