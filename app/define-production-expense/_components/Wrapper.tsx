@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import ProductionExpenseToolbar from './ProductionExpenseToolbar';
 import { Heading } from '@/components/Heading';
 import usePostProvider from '@/hooks/usePostProvider';
+import { toast } from 'sonner';
 
 type ExpenseData = {
     productname: string;
@@ -31,7 +32,7 @@ const Wrapper = () => {
 
 
     const fetchAllProducts = useDataProvider({
-        querykey: ['all-products-dp'],
+        querykey: ['all-products-prod-exp'],
         endpoint: 'api/fabric-types/products'
     })
 
@@ -40,18 +41,35 @@ const Wrapper = () => {
         endpoint: 'api/expense/type/id?expensetype=PR'
     })
 
+    const fetchProductionExpenses = useDataProvider({
+        querykey: ['production-expenses'],
+        endpoint: 'api/operating-costs/fetch?expensetype=PR&categoryname=Production&categorytype=P'
+    })
+
+    console.log(fetchProductionExpenses);
+
     const addNewExpenseHead = usePostProvider()
 
     function handleExpenseHeadSubmit(payload: ExpenseData) {
-        addNewExpenseHead.mutate({
+        addNewExpenseHead.mutateAsync({
             method: 'POST',
-            endpoint: 'api/expense/production/new',
+            endpoint: 'api/operating-costs/new',
             payload: payload
+        }, {
+            onSuccess: () => {
+                fetchProductionExpenses.refetch()
+                toast.success('Expense Head Added Successfully')
+                setShowDialog(false)
+            },
+            onError: (error) => {
+                toast.error('Error Adding Expense Head')
+            }
         })
     }
 
-
-    // const nextSortOrder = typeData?.data?.success?.[0]?.fabric_type.length > 0 ? Math.max(...typeData?.data?.success?.[0]?.fabric_type?.map((obj: any) => obj.sortorder)) + 10 : null;
+    console.log(fetchProductionExpenses, 'fetchProductionExpenses');
+    const nextSortOrder = 10;
+    // const nextSortOrder = fetchProductionExpenses?.data?.data?.length > 0 ? Math.max(...fetchProductionExpenses?.data?.data?.map((obj: any) => obj.sortorder)) + 10 : 10;
 
 
     return (
@@ -65,11 +83,10 @@ const Wrapper = () => {
                     </Button>}
                 </div>
             </div>
-            {showDialog && <ProductionExpenseToolbar options={fetchProductionOptions?.data?.data} setShowDialog={setShowDialog} productsData={fetchAllProducts} sortorder={10} handleExpenseHeadSubmit={handleExpenseHeadSubmit} />}
+            {showDialog && <ProductionExpenseToolbar options={fetchProductionOptions?.data?.data} setShowDialog={setShowDialog} productsData={fetchAllProducts} sortorder={nextSortOrder} handleExpenseHeadSubmit={handleExpenseHeadSubmit} />}
             <div className='flex gap-4 w-full'>
-
                 <ProductsCard selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} productsData={fetchAllProducts} />
-                <ProductionExpenseCard selectedProduct={selectedProduct} expenseData={sampleData} />
+                <ProductionExpenseCard selectedProduct={selectedProduct} expenseData={fetchProductionExpenses} />
             </div></>
     )
 }
@@ -77,21 +94,3 @@ const Wrapper = () => {
 export default Wrapper
 
 
-const sampleData = [
-    {
-        productname: 'Jacket',
-        category_name: 'Production Cost (Direct)',
-        subcategory_name: 'Factory',
-        currency: 'THB',
-        unit_cost: 10.00,
-        notes: 'Machine washable',
-    },
-    {
-        productname: 'Jacket',
-        category_name: 'Production Cost (Direct)',
-        subcategory_name: 'Factory',
-        currency: 'USD',
-        unit_cost: 1.00,
-        notes: 'Slim fit',
-    },
-];

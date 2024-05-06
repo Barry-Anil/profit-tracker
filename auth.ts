@@ -25,14 +25,14 @@ export const authConfig = {
     secret: process.env.NEXTAUTH_SECRET,
     trustHost: true,
     callbacks: {
-        // async jwt({ token, user, account }) {
-        //     // Persist the OAuth access_token to the token right after signin
-        //     if (account) {
-        //         token.accessToken = account.access_token;
-        //     }
+        async jwt({ token, user, account }) {
+            // Persist the OAuth access_token to the token right after signin
+            if (account) {
+                token.accessToken = account.access_token;
+            }
 
-        //     return token;
-        // },
+            return token;
+        },
         async session({ session, token }) {
             if (typeof token?.accessToken === 'string') {
                 session.sessionToken = token.accessToken;

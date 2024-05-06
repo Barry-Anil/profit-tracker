@@ -153,14 +153,14 @@ const ProductionExpenseToolbar = ({ options, setShowDialog, productsData, sortor
                         />
                     </div>
                     <div className="">
-                        <p className="font-bold font-sans">Notes</p>
+                        <p className="font-bold font-sans">Narration</p>
                         <Textarea
                             className="min-w-[200px] max-w-[280px]"
                             value={form?.narration}
                             onChange={(e) => {
                                 setForm({ ...form, narration: e.target.value });
                             }}
-                            placeholder="Notes"
+                            placeholder="Narration"
                         />
                     </div>
                 </div>
@@ -168,7 +168,19 @@ const ProductionExpenseToolbar = ({ options, setShowDialog, productsData, sortor
                     <Button
                         className="w-[100px]"
                         onClick={() => {
-                            handleExpenseHeadSubmit(form);
+                            handleExpenseHeadSubmit(form)
+                            setForm({
+                                productname: '',
+                                productid: 0,
+                                expense_type: 'PR',
+                                category_name: '',
+                                category_type: 'P',
+                                subcategory_name: '',
+                                currency: '',
+                                total_cost: 0,
+                                narration: '',
+                                sortorder: sortorder,
+                            });
                         }}
                     >
                         Add

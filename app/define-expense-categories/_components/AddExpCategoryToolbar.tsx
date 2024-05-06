@@ -11,13 +11,13 @@ import { toast } from 'sonner';
 const AddExpCategoryToolbar = ({
     setShowDialog,
     selectedCategory,
-    refetchCategoryData
+    categoryData
 }: {
     setShowDialog: any;
     selectedCategory: {
         categoryName: string;
     };
-    refetchCategoryData: any;
+    categoryData: any;
 }) => {
     const queryClient = useQueryClient();
     const [newCategory, setNewCategory] = React.useState(false);
@@ -29,7 +29,7 @@ const AddExpCategoryToolbar = ({
     });
 
     const postCategoryData = usePostProvider();
-
+    const data = categoryData?.data?.data?.all_expense_types ?? []
     return (
         <Card className='mb-4'>
             <CardHeader>
@@ -90,9 +90,9 @@ const AddExpCategoryToolbar = ({
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    {expenseTypes.map((type: { name: string; id: string }) => (
-                                        <SelectItem key={type.id} value={type.id} className="flex gap-2">
-                                            {type.name}
+                                    {data.map((type: { expense_type_name: string; expense_type: string }) => (
+                                        <SelectItem key={type?.expense_type} value={type?.expense_type} className="flex gap-2">
+                                            {type?.expense_type_name}
                                         </SelectItem>
                                     ))}
                                 </SelectGroup>
@@ -144,7 +144,7 @@ const AddExpCategoryToolbar = ({
                                             sortorder: 0,
                                         });
                                         // setShowDialog(false);
-                                        refetchCategoryData.refetch();
+                                        categoryData.refetch();
                                     },
                                     onError: (error) => {
                                         toast.error('Error Adding Category');

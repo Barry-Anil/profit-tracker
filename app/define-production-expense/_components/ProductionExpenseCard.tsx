@@ -27,7 +27,7 @@ const ProductionExpenseCard = ({ selectedProduct, expenseData }: {
             <CardContent>
                 {expenseData?.isLoading ? <div className="flex gap-2 justify-center items-center my-10 text-xl font-semibold">
                     <Loader className="w-4 h-4 animate-spin" /> Loading...
-                </div> : <CostingTable expenseData={expenseData} />}
+                </div> : <CostingTable expenseData={expenseData?.data?.data} />}
             </CardContent>
         </Card>
     );

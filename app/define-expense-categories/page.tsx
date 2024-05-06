@@ -42,7 +42,7 @@ const DefineExpenseCategories = () => {
                     </Button>}
                 </div>
             </div>
-            {showDialog && <AddExpCategoryToolbar selectedCategory={selectedCategory} setShowDialog={setShowDialog} refetchCategoryData={getCategories} />}
+            {showDialog && <AddExpCategoryToolbar selectedCategory={selectedCategory} setShowDialog={setShowDialog} categoryData={getCategories} />}
 
             <div className='flex gap-4 w-full'>
                 <ExpenseCategoryCard selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categoryData={getCategories} />

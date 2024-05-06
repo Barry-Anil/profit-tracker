@@ -35,10 +35,10 @@ export function ShippingCostColumns() {
             cell: ({ row }) => <p className="truncate">{row.getValue('currency') ?? 'NA'}</p>,
         },
         {
-            accessorKey: 'unit_cost',
-            header: 'Unit Cost',
+            accessorKey: 'total_cost',
+            header: 'Total Cost',
             cell: ({ row }) => {
-                const cost = Number(row.getValue('unit_cost'))?.toFixed(2)
+                const cost = Number(row.getValue('total_cost'))?.toFixed(2)
                 return <p className="truncate">{cost ?? 'NA'}</p>
             },
         },

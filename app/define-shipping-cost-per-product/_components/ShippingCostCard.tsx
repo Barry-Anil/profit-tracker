@@ -11,16 +11,8 @@ const ShippingCostCard = ({ selectedSalesTrip, shippingCostData }: {
     },
     shippingCostData: any
 }) => {
-    const [form, setForm] = React.useState({
-        sortorder: 0,
-        productname: '',
-        productshortname: '',
-        product_weight: 0,
-        currency: 'THB',
-        unitCost: 0,
-        narration: '',
-    })
-    const [showDialog, setShowDialog] = React.useState(false)
+
+    console.log(shippingCostData?.data?.data, 'shippingCostData');
 
     // const nextSortOrder = typeData?.data?.success?.[0]?.fabric_type.length > 0 ? Math.max(...typeData?.data?.success?.[0]?.fabric_type?.map((obj: any) => obj.sortorder)) + 10 : null;
     return (
@@ -29,19 +21,14 @@ const ShippingCostCard = ({ selectedSalesTrip, shippingCostData }: {
                 <div>
                     <CardTitle className='w-fit'>Shipping Cost for <span className='text-primary'>{selectedSalesTrip?.salestrip_name}</span> </CardTitle>
                 </div>
-                <div>
-                    {!showDialog && <Button onClick={() => {
-                        setShowDialog(true)
-                    }}>+Add / Modify Shipping Cost
-                    </Button>}
-                </div>
+
             </CardHeader>
             <CardContent>
-                {showDialog && <AddModifyShippingCostForm form={form} setForm={setForm} setShowDialog={setShowDialog} />}
+
                 {shippingCostData?.isLoading ? <div className="flex gap-2 justify-center items-center my-10 text-xl font-semibold">
                     <Loader className="w-4 h-4 animate-spin" /> Loading...
                 </div> :
-                    <ShippingCostTable shippingCostData={shippingCostData} />
+                    < ShippingCostTable shippingCostData={shippingCostData?.data?.data} />
                 }
             </CardContent>
         </Card>

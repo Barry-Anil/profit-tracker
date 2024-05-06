@@ -34,6 +34,10 @@ function ExpenseCategoryCard({ selectedCategory, setSelectedCategory, categoryDa
                             </Card>
                         ))}
                     </CardContent>
+                ) : data.length === 0 ? (
+                    <CardContent>
+                        No categories found
+                    </CardContent>
                 ) : (
                     <ScrollArea className="h-screen">
                         <CardContent className="flex flex-col gap-4 p-4 hover:cursor-pointer">

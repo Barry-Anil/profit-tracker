@@ -1,7 +1,4 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
-import { Trash2 } from 'lucide-react';
 export function costingColumns() {
     const columns: ColumnDef<any>[] = [
         {
@@ -33,17 +30,17 @@ export function costingColumns() {
             cell: ({ row }) => <p className="truncate">{row.getValue('currency') ?? 'NA'}</p>,
         },
         {
-            accessorKey: 'unit_cost',
+            accessorKey: 'total_cost',
             header: 'Unit Cost',
             cell: ({ row }) => {
-                const cost = Number(row.getValue('unit_cost'))?.toFixed(2)
+                const cost = Number(row.getValue('total_cost'))?.toFixed(2)
                 return <p className="truncate">{cost ?? 'NA'}</p>
             },
         },
         {
-            accessorKey: 'notes',
-            header: 'Notes',
-            cell: ({ row }) => <p className="truncate">{row.getValue('notes') ?? 'NA'}</p>,
+            accessorKey: 'narration',
+            header: 'Narraton',
+            cell: ({ row }) => <p className="truncate">{row.getValue('narration') ?? 'NA'}</p>,
         },
 
     ];

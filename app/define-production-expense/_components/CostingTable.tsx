@@ -17,7 +17,7 @@ const CostingTable = ({ expenseData }: any) => {
     const [globalFilter, setGlobalFilter] = React.useState('');
     // const tableData = expenseData?.data?.success?.[0]?.fabric_type?.sort((a: any, b: any) => a.sortorder - b.sortorder) ?? alternateData;
     const table = useReactTable({
-        data: expenseData,
+        data: expenseData ?? alternateData,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
