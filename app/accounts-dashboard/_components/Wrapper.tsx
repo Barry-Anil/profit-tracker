@@ -7,9 +7,12 @@ import SourceFilter from "./SourceFilter";
 import StagesTable from "./StagesTable";
 import StageDetailTable from "./StageDetailTable";
 import TotalCurrencyTable from "./TotalCurrencyTable";
+import useStagesTableData from "../_hooks/getStagesTableData";
 
 const Wrapper = () => {
 	const salestripData = useSalestrip();
+	const stagesTableData = useStagesTableData();
+	console.log(stagesTableData?.data?.data, "sdfsdfsdf");
 	return (
 		<Card>
 			<CardHeader className="bg-primary rounded-t-md text-white">
@@ -18,8 +21,8 @@ const Wrapper = () => {
 			<CardContent className="w-full pt-4 space-y-6">
 				<SelectSalesTrip salestripData={salestripData} />
 				<SearchOrderNumber />
-				<SourceFilter tableData={[]} />
-				<StagesTable />
+				<SourceFilter tableData={stagesTableData} />
+				<StagesTable stagesTableData={stagesTableData} />
 				<TotalCurrencyTable />
 				<StageDetailTable />
 			</CardContent>

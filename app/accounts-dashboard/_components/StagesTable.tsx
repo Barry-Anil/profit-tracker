@@ -18,7 +18,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 const alternativeData: any[] = [];
 
-const StagesTable = () => {
+const StagesTable = ({ stagesTableData }: { stagesTableData: any }) => {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[],

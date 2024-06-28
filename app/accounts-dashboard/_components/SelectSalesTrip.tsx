@@ -96,7 +96,7 @@ const SelectSalesTrip = ({ salestripData }: SelectSalesTripProps) => {
 			</Select>
 			<Button
 				variant="secondary"
-				className="bg-slate-200"
+				className="bg-slate-200 dark:bg-slate-700 dark:text-slate-200"
 				onClick={() => {
 					const searchParams = new URLSearchParams(window.location.search);
 					searchParams.set("salestrip", "");

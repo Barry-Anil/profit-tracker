@@ -23,7 +23,7 @@ const SourceFilter = ({ tableData }: { tableData: any }) => {
 					);
 				}}
 			>
-				All - <span className=""> {tableData?.length}</span>
+				All - <span className=""> {tableData?.data?.data?.length}</span>
 			</Button>
 			<Button
 				className={cn(
@@ -43,8 +43,9 @@ const SourceFilter = ({ tableData }: { tableData: any }) => {
 				Sam Surin -
 				<span className="">
 					{
-						tableData?.filter((item: any) => item.ordersource.trim() === "SS")
-							?.length
+						tableData?.data?.data?.filter(
+							(item: any) => item?.ordersource?.trim() === "SS",
+						)?.length
 					}
 				</span>
 			</Button>
@@ -66,8 +67,9 @@ const SourceFilter = ({ tableData }: { tableData: any }) => {
 				Reseller -
 				<span className="">
 					{
-						tableData?.filter((item: any) => item.ordersource.trim() === "R")
-							?.length
+						tableData?.data?.data?.filter(
+							(item: any) => item?.ordersource?.trim() === "R",
+						)?.length
 					}
 				</span>
 			</Button>
@@ -89,8 +91,9 @@ const SourceFilter = ({ tableData }: { tableData: any }) => {
 				Local -
 				<span className="">
 					{
-						tableData?.filter((item: any) => item.ordersource.trim() === "L")
-							?.length
+						tableData?.data?.data?.filter(
+							(item: any) => item?.ordersource?.trim() === "L",
+						)?.length
 					}
 				</span>
 			</Button>
@@ -112,8 +115,9 @@ const SourceFilter = ({ tableData }: { tableData: any }) => {
 				Sam Surin - VIP -
 				<span className="">
 					{
-						tableData?.filter((item: any) => item.ordersource.trim() === "SSV")
-							?.length
+						tableData?.data?.data?.filter(
+							(item: any) => item?.ordersource?.trim() === "SSV",
+						)?.length
 					}
 				</span>
 			</Button>
