@@ -129,34 +129,35 @@ const StageDetailTable = () => {
 
 				let delay: boolean;
 
-				if (order_since >= 10 && rowID === "Partial Completed") {
-					delay = true;
-				}
+				// if (order_since >= 10 && rowID === "Partial Completed") {
+				// 	delay = true;
+				// }
 
-				if (
-					order_since >= 100 &&
-					rowID === "Cutting" &&
-					columnID !== "Alteration"
-				) {
-					delay = true;
-				}
+				// if (
+				// 	order_since >= 100 &&
+				// 	rowID === "Cutting" &&
+				// 	columnID !== "Alteration"
+				// ) {
+				// 	delay = true;
+				// }
 
-				if (order_since >= 100 && rowID === "Pending Accounts Approval") {
-					delay = true;
-				}
+				// if (order_since >= 100 && rowID === "Pending Accounts Approval") {
+				// 	delay = true;
+				// }
 
-				if (
-					order_since >= 60 &&
-					rowID === "Completed" &&
-					columnID === "Normal"
-				) {
-					delay = true;
-				}
+				// if (
+				// 	order_since >= 60 &&
+				// 	rowID === "Completed" &&
+				// 	columnID === "Normal"
+				// ) {
+				// 	delay = true;
+				// }
 
 				return (
-					<p className={`${delay ? "text-red-500" : ""} font-semibold`}>
-						{order_since}{" "}
-					</p>
+					// <p className={`${delay ? "text-red-500" : ""} font-semibold`}>
+					// 	{order_since}{" "}
+					// </p>
+					<p>{order_since}</p>
 				);
 			},
 		},
