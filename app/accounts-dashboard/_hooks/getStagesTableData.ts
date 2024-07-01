@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 const useStagesTableData = () => {
-    const salestripData = async () => {
+    const stagesTableData = async () => {
         const baseURL = 'https://apierp02.officevg.com/sales/orders';
         const headers = {
             'Content-Type': 'application/json',
@@ -28,8 +28,8 @@ const useStagesTableData = () => {
     };
 
     return useQuery({
-        queryFn: salestripData,
-        queryKey: ['salestripData'],
+        queryFn: stagesTableData,
+        queryKey: ['stagesTableData'],
     });
 };
 
