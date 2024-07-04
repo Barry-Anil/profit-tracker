@@ -1,36 +1,17 @@
-import { useQuery } from '@tanstack/react-query';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { toast } from 'sonner';
 
-const useStagesTableData = () => {
+const useStagesTableData = (year: any) => {
     const stagesTableData = async () => {
-        const baseURL = 'https://apierp02.officevg.com/sales/orders';
-        const headers = {
-            'Content-Type': 'application/json',
-            Filtercriteria: JSON.stringify({
-                searchcriteria: 'orderlist_activesalestrip',
-                q: {
-                    salestrip: '',
-                    ordergrouping: '',
-                    ordersource: '',
-                    orderpriority: '',
-                    accounts_payment_approval: '',
-                    fabric_issue_status: '',
-                    prodreg_status: '',
-                    prod_status: '',
-                    qa_status: '',
-                    pkg_status: '',
-                    year: 2024,
-                },
-            }),
-        };
-
-        return await axios.get(baseURL, { headers });
+        const baseURL = 'https://apierppy10.officevg.com/accounts/orders/year';
+        return await axios.post(baseURL,{year: year});
     };
 
     return useQuery({
         queryFn: stagesTableData,
-        queryKey: ['stagesTableData'],
-    });
-};
+        queryKey: ['stagesTableData', year],
 
+    });
+}
 export default useStagesTableData;
