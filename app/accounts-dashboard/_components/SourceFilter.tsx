@@ -7,7 +7,6 @@ const SourceFilter = ({ tableData, setSelectedData }: { tableData: any , setSele
 	const searchParams = useSearchParams();
 	const selectedSource = searchParams.get("source") || "All";
 
-	console.log(tableData?.data?.data, "samsurin")
 
 	return (
 		<div className="mb-4 mt-4 flex flex-wrap gap-4">

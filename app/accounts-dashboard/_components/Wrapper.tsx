@@ -14,26 +14,33 @@ import { SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import { error } from "console";
 import useStagesData from "../_hooks/getStagesData";
+import useFilterOrderData from "../_hooks/getFilterOrderData";
+import { setDate } from "date-fns";
 
 const Wrapper = () => {
 
 	const [orderData, setOrderData] = useState<any[]>([])
-	
+
 	const searchParams = useSearchParams()
 	const year = searchParams.get('year') || '2024';
 	const salestrip = searchParams.get('salestrip') || '';
 	const ordernumber = searchParams.get('searchOrder') || '';
 	const [rowID, setRowID] = useState('');
+	const [columnID, setColumnID] = useState('')
+	const [columnIdValues, setColumnIdValues] = useState('');
+	const [rowIdValues, setRowIdValues] = useState('');
+	const [isOrderPriority, setIsOrderPriority] = useState(false)
+	const [fabricIssue, setFabricIssue] = useState('')
+	const [orderNumberData, setOrderNumberData] = useState<any[]>([])
+
+
 	const salestripData = useSalestrip();
 	const stagesData = useStagesData(year, salestrip);
+	const filterData = useFilterOrderData(year, columnID, rowID)
+
 	const [selectedData, setSelectedData] = useState('acc_app_all');
 	const [rowPrice, setRowPrice] = useState<any[]>()
 
-	const [columnID, setColumnID] = useState()
-    const [columnIdValues, setColumnIdValues] = useState('');
-    const [rowIdValues, setRowIdValues] = useState('');
-    const [isOrderPriority, setIsOrderPriority] = useState(false)
-    const [fabricIssue, setFabricIssue] = useState('')
 
 	const userDataDetails = async () => {
 		const baseURL = "https://apierp02.officevg.com/sales/orders";
@@ -44,15 +51,14 @@ const Wrapper = () => {
 			Filtercriteria: `{"searchcriteria":"ordernumber","q":{"ordernumber":"${ordernumber}"}}`,
 		};
 
-		await axios.get(baseURL, { headers }).then((res: any) =>  setOrderData([res?.data])).catch((error: any) => console.log(error))
+		await axios.get(baseURL, { headers }).then((res: any) => setOrderNumberData([res?.data])).catch((error: any) => console.log(error))
 	};
 
-	console.log(orderData, "orde data 23322323232")
 
 	useEffect(() => {
 		if (Array.isArray(orderData)) {
 			const combineByCurrency = (data: any) => {
-				const combinedData = data.reduce((acc : any, item: any) => {
+				const combinedData = data.reduce((acc: any, item: any) => {
 					const {
 						accounts_currencyint,
 						accounts_invoiceamt_currencyint,
@@ -107,8 +113,17 @@ const Wrapper = () => {
 		}
 	}, [orderData]);
 
-	console.log(rowPrice, "row price")
 
+	console.log(filterData, "filterData")
+
+	useEffect(() => {
+		setOrderData([])
+		if (filterData?.data != undefined) {
+
+			setOrderData(filterData?.data?.data)
+		}
+
+	}, [filterData?.data, rowID, columnID])
 
 
 	return (
@@ -118,11 +133,11 @@ const Wrapper = () => {
 			</CardHeader>
 			<CardContent className="w-full pt-4 space-y-6">
 				<SelectSalesTrip salestripData={salestripData} />
-				<SearchOrderNumber userDataDetails={userDataDetails}/>
-				<SourceFilter tableData={stagesData} setSelectedData={setSelectedData}/>
-				<StagesTable 
-					stagesData={stagesData}  
-					selectedData={selectedData} 
+				<SearchOrderNumber userDataDetails={userDataDetails} />
+				<SourceFilter tableData={stagesData} setSelectedData={setSelectedData} />
+				<StagesTable
+					stagesData={stagesData}
+					selectedData={selectedData}
 					setColumnID={setColumnID}
 					setColumnIdValues={setColumnIdValues}
 					setIsOrderPriority={setIsOrderPriority}
@@ -130,8 +145,8 @@ const Wrapper = () => {
 					setRowID={setRowID}
 					setRowIdValues={setRowIdValues}
 				/>
-				<TotalCurrencyTable rowPrice={rowPrice}/>
-				<StageDetailTable orderData={orderData} rowID={rowID}/>
+				<TotalCurrencyTable rowPrice={rowPrice} />
+				<StageDetailTable orderData={orderNumberData?.length != 0 ? orderNumberData : filterData?.data?.data} rowID={rowID} />
 			</CardContent>
 		</Card>
 	);

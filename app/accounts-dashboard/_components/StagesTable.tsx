@@ -36,13 +36,10 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
 	};
 
 
-	console.log(stagesData?.data?.data, "stagesTableData 22222")
 
     const handleClick = (row: any, column: any) => {
         let column_id = column?.id;
-        let column_row = row?.original?.fabric_approved_status?.find((item: any) => item.orderpriority_value == column_id);
-        // console.log(column_row?.orderpriority_value, 'adjahsdihasdujkg');
-        // console.log(row?.original?.fabric_issue_status_value, 'row');
+        let column_row = row?.original?.accounts_payment_approval_status?.find((item: any) => item.orderpriority_value == column_id);
         if (column_row) {
             setColumnID(column_row?.orderpriority);
             setColumnIdValues(column_row?.orderpriority_value);
@@ -50,9 +47,9 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
             setFabricIssue('');
         }
         setFabricIssue('');
-        setRowID(row?.original?.fabric_issue_status);
+        setRowID(row?.original?.accounts_payment_approval);
         setColumnIdValues(column_row?.orderpriority_value);
-        setRowIdValues(row?.original?.fabric_issue_status_value);
+        setRowIdValues(row?.original?.accounts_payment_approval_val);
     };
 
 
@@ -76,7 +73,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
                 const count = data?.total_order_count;
                 return (
                     <div>
-                        <Link href="/pending-orderlist#pendingTable">
+                        <Link href="#">
                             <Button onClick={() => {}}>{count}</Button>
                         </Link>
                     </div>
@@ -86,7 +83,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
         {
             accessorKey: '',
             header: ({ table }) => (
-                <Link href="/pending-orderlist#pendingTable" className="flex items-center gap-1 truncate">
+                <Link href="#" className="flex items-center gap-1 truncate">
                     Alteration
                     <Badge>
                         {table &&
@@ -116,9 +113,16 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
 
                 if (match) {
                     return (
-                        <Link className="text-blue-500" href="/pending-orderlist#pendingTable">
-                            {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                        </Link>
+                        <> 
+                        {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                     
+                        </Link> : (
+                              <Link className="text-blue-500" href="#">
+                                  <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                              </Link>
+                              
+                        )} 
+                        </>
                     );
                 }
 
@@ -128,7 +132,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
         {
             accessorKey: '',
             header: ({ table }) => (
-                <Link href="/pending-orderlist#pendingTable" className="flex items-center gap-1 truncate">
+                <Link href="#" className="flex items-center gap-1 truncate">
                     Cancelled
                     <Badge>
                         {table &&
@@ -157,9 +161,16 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
 
                 if (match) {
                     return (
-                        <Link className="text-blue-500" href="/pending-orderlist#pendingTable">
-                            {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                        </Link>
+                        <> 
+                        {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                     
+                        </Link> : (
+                              <Link className="text-blue-500" href="#">
+                                  <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                              </Link>
+                              
+                        )} 
+                        </>
                     );
                 }
 
@@ -169,7 +180,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
         {
             accessorKey: '',
             header: ({ table }) => (
-                <Link href="/pending-orderlist#pendingTable" className="flex items-center gap-1 truncate">
+                <Link href="#" className="flex items-center gap-1 truncate">
                     Fitting{' '}
                     <Badge>
                         {table &&
@@ -199,9 +210,16 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
 
                 if (match) {
                     return (
-                        <Link className="text-blue-500" href="/pending-orderlist#pendingTable">
-                            {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                        </Link>
+                        <> 
+                        {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                     
+                        </Link> : (
+                              <Link className="text-blue-500" href="#">
+                                  <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                              </Link>
+                              
+                        )} 
+                        </>
                     );
                 }
                 // Fallback if no matching status found
@@ -212,7 +230,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
         {
             accessorKey: '',
             header: ({ table }) => (
-                <Link href="/pending-orderlist#pendingTable" className="flex items-center gap-1 truncate">
+                <Link href="#" className="flex items-center gap-1 truncate">
                     ROF-C{' '}
                     <Badge>
                         {table &&
@@ -244,13 +262,27 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
                     return (
                         <>
                             {alterationValue?.fabric_issue_status_value == 'Completed' || alterationValue?.fabric_issue_status_value == 'Partial Completed' ? (
-                                <Link className="rounded-lg bg-gray-700 p-[4px] text-white " href="/pending-orderlist#pendingTable">
-                                    {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                                </Link>
+                                <> 
+                                {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                             
+                                </Link> : (
+                                      <Link className="text-blue-500" href="#">
+                                          <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                                      </Link>
+                                      
+                                )} 
+                                </>
                             ) : (
-                                <Link className="text-blue-600 " href="/pending-orderlist#pendingTable">
-                                    {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                                </Link>
+                                <> 
+                                {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                             
+                                </Link> : (
+                                      <Link className="text-blue-500" href="#">
+                                          <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                                      </Link>
+                                      
+                                )} 
+                                </>
                             )}
                         </>
                     );
@@ -262,7 +294,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
         {
             accessorKey: '',
             header: ({ table }) => (
-                <Link href="/pending-orderlist#pendingTable" className="flex items-center gap-1 truncate">
+                <Link href="#" className="flex items-center gap-1 truncate">
                     ROF-NC{' '}
                     <Badge>
                         {table &&
@@ -292,9 +324,16 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
 
                 if (match) {
                     return (
-                        <Link className="text-blue-500" href="/pending-orderlist#pendingTable">
-                            {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                        </Link>
+                        <> 
+                        {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                     
+                        </Link> : (
+                              <Link className="text-blue-500" href="#">
+                                  <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                              </Link>
+                              
+                        )} 
+                        </>
                     );
                 }
                 // Fallback if no matching status found
@@ -304,7 +343,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
         {
             accessorKey: '',
             header: ({ table }) => (
-                <Link href="/pending-orderlist#pendingTable" className="flex items-center gap-1 truncate">
+                <Link href="#" className="flex items-center gap-1 truncate">
                     Normal{' '}
                     <Badge>
                         {table &&
@@ -334,9 +373,16 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
 
                 if (match) {
                     return (
-                        <Link className="text-blue-500" href="/pending-orderlist#pendingTable">
-                            {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                        </Link>
+                        <> 
+                        {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                     
+                        </Link> : (
+                              <Link className="text-blue-500" href="#">
+                                  <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                              </Link>
+                              
+                        )} 
+                        </>
                     );
                 }
                 // Fallback if no matching status found
@@ -346,7 +392,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
         {
             accessorKey: '',
             header: ({ table }) => (
-                <Link href="/pending-orderlist#pendingTable" className="flex items-center gap-1 truncate">
+                <Link href="#" className="flex items-center gap-1 truncate">
                     Remake{' '}
                     <Badge>
                         {table &&
@@ -376,9 +422,16 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
 
                 if (match) {
                     return (
-                        <Link className="text-blue-500" href="/pending-orderlist#pendingTable">
-                            {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                        </Link>
+                        <> 
+                        {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                     
+                        </Link> : (
+                              <Link className="text-blue-500" href="#">
+                                  <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                              </Link>
+                              
+                        )} 
+                        </>
                     );
                 }
                 // Fallback if no matching status found
@@ -388,7 +441,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
         {
             accessorKey: '',
             header: ({ table }) => (
-                <Link href="/pending-orderlist#pendingTable" className="flex items-center gap-1 truncate">
+                <Link href="#" className="flex items-center gap-1 truncate">
                     Urgent{' '}
                     <Badge>
                         {table &&
@@ -418,9 +471,16 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
 
                 if (match) {
                     return (
-                        <Link className="text-blue-500" href="/pending-orderlist#pendingTable">
-                            {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                        </Link>
+                        <> 
+                        {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                     
+                        </Link> : (
+                              <Link className="text-blue-500" href="#">
+                                  <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                              </Link>
+                              
+                        )} 
+                        </>
                     );
                 }
                 // Fallback if no matching status found
@@ -430,7 +490,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
         {
             accessorKey: '',
             header: ({ table }) => (
-                <Link href="/pending-orderlist#pendingTable" className="flex items-center gap-1 truncate">
+                <Link href="#" className="flex items-center gap-1 truncate">
                     VIP{' '}
                     <Badge>
                         {table &&
@@ -460,9 +520,16 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
 
                 if (match) {
                     return (
-                        <Link className="text-blue-500" href="/pending-orderlist#pendingTable">
-                            {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                        </Link>
+                        <> 
+                        {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                     
+                        </Link> : (
+                              <Link className="text-blue-500" href="#">
+                                  <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                              </Link>
+                              
+                        )} 
+                        </>
                     );
                 }
                 // Fallback if no matching status found
@@ -472,7 +539,7 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
         {
             accessorKey: '',
             header: ({ table }) => (
-                <Link href="/pending-orderlist#pendingTable" className="flex items-center gap-1 truncate">
+                <Link href="#" className="flex items-center gap-1 truncate">
                     Wedding{' '}
                     <Badge>
                         {table &&
@@ -502,9 +569,17 @@ const StagesTable = ({ stagesData, selectedData, setColumnID, setColumnIdValues,
 
                 if (match) {
                     return (
-                        <Link className="text-blue-500" href="/pending-orderlist#pendingTable">
-                            {match[0].ordercount == 0 ? " " : match[0].ordercount}
-                        </Link>
+                        <> 
+                        {match[0].ordercount == 0 ? <Link className="text-blue-500" href="#">
+                     
+                        </Link> : (
+                              <Link className="text-blue-500" href="#">
+                                  <Button variant='outline' onClick={() => handleClick(row, column)}> {match[0].ordercount}   </Button>
+                              </Link>
+                              
+                        )} 
+                        </>
+                      
                     );
                 }
                 // Fallback if no matching status found

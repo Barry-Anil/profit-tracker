@@ -17,15 +17,16 @@ import { ArrowUpDown, ArrowUpRight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import UpdateEdit from "./UpdateEdit";
+import ApprovalEdit from "./ApprovalEdit";
 const alternativeData: any[] = [];
 
-const StageDetailTable = ({orderData, rowID} : {orderData : any, rowID: any}) => {
+const StageDetailTable = ({ orderData, rowID }: { orderData: any, rowID: any }) => {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[],
 	);
 
-    const [approveButtonColor, setApproveButtonColor] = React.useState('');
+	const [approveButtonColor, setApproveButtonColor] = React.useState('');
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState({});
@@ -33,6 +34,7 @@ const StageDetailTable = ({orderData, rowID} : {orderData : any, rowID: any}) =>
 	const searchParams = useSearchParams();
 	const ordernumber = searchParams.get('searchOrder') || '';
 
+	console.log(orderData, "ordeer Dataa")
 
 
 	const columns: ColumnDef<any>[] = [
@@ -41,27 +43,24 @@ const StageDetailTable = ({orderData, rowID} : {orderData : any, rowID: any}) =>
 			header: "Action",
 			cell: ({ row }) => {
 				if (rowID === 'Partial Completed') {
-				    setApproveButtonColor('text-yellow-800 border border-yellow-500');
+					setApproveButtonColor('text-yellow-800 border border-yellow-500');
 				}
 
 				if (rowID === 'Cutting') {
-				    setApproveButtonColor('text-red-500 border border-red-500');
+					setApproveButtonColor('text-red-500 border border-red-500');
 				}
 
 				if (rowID === 'Pending Accounts Approval') {
-				    setApproveButtonColor('text-red-500 border border-red-500');
+					setApproveButtonColor('text-red-500 border border-red-500');
 				}
 
 				if (rowID === 'Completed') {
-				    setApproveButtonColor('text-green-800 border border-green-500');
+					setApproveButtonColor('text-green-800 border border-green-500');
 				}
 
-				// console.log(approveButtonColor, 'approveButtonColor');
 				return (
 					<div className="flex gap-2">
-                        <Button variant="link" className={`text-base ${approveButtonColor}`}>
-                            Approve Account Approval <ArrowUpRight className="ml-1 h-4 w-4" />
-                        </Button>
+						<ApprovalEdit row={row} approveButtonColor={approveButtonColor}/>
 						<UpdateEdit row={row} />
 					</div>
 				);
@@ -132,12 +131,12 @@ const StageDetailTable = ({orderData, rowID} : {orderData : any, rowID: any}) =>
 				const today_date = new Date();
 				const order_since = Math.ceil(
 					(today_date.getTime() - formatted_date.getTime()) /
-						(1000 * 60 * 60 * 24),
+					(1000 * 60 * 60 * 24),
 				);
 
-	
+
 				return (
-	
+
 					<p>{order_since}</p>
 				);
 			},
@@ -191,7 +190,7 @@ const StageDetailTable = ({orderData, rowID} : {orderData : any, rowID: any}) =>
 			header: "Balance Amt(INT)",
 			cell: ({ row }) => {
 
-				const balance =  Math.ceil((row.getValue("accounts_invoiceamt_currencyint") as number ) - (row.getValue("accounts_receiptamt_currencyint") as number)).toFixed(2);
+				const balance = Math.ceil((row.getValue("accounts_invoiceamt_currencyint") as number) - (row.getValue("accounts_receiptamt_currencyint") as number)).toFixed(2);
 				return <div className="capitalize w-44">{balance}</div>
 			},
 		},
@@ -248,7 +247,7 @@ const StageDetailTable = ({orderData, rowID} : {orderData : any, rowID: any}) =>
 			header: "Balance Amt(THB)",
 			cell: ({ row }) => {
 
-				const balance =  Math.ceil((row.getValue("accounts_invoiceamt") as number) - (row.getValue("accounts_receiptamt") as number)).toFixed(2);
+				const balance = Math.ceil((row.getValue("accounts_invoiceamt") as number) - (row.getValue("accounts_receiptamt") as number)).toFixed(2);
 				return <div className="capitalize w-44">{balance}</div>
 			},
 		},
@@ -301,33 +300,32 @@ const StageDetailTable = ({orderData, rowID} : {orderData : any, rowID: any}) =>
 			accessorKey: "",
 			header: "Order Items and Notes",
 			cell: ({ row }) => {
-				console.log(row?.original, "row original")
-                return (
-                    <Table className="rounded-md border">
-                        <TableHeader className="truncate bg-slate-100">
-                            <TableHead className="text-black p-2">Item</TableHead>
-                            <TableHead className="text-black p-2">Order</TableHead>
-                            <TableHead className="text-black p-2">Ready</TableHead>
-                            <TableHead className="text-black p-2">Not Ready</TableHead>
-                        </TableHeader>
+				return (
+					<Table className="rounded-md border">
+						<TableHeader className="truncate bg-slate-100">
+							<TableHead className="text-black p-2">Item</TableHead>
+							<TableHead className="text-black p-2">Order</TableHead>
+							<TableHead className="text-black p-2">Ready</TableHead>
+							<TableHead className="text-black p-2">Not Ready</TableHead>
+						</TableHeader>
 
-                        <TableBody className="p-2">
-                            {row?.original?.item_current_status?.map((product: any, index: number) => (
-                                <TableRow
-                                    className={`${index % 2 === 0 ? 'bg-white dark:bg-gray-800 ' : 'bg-gray-100   dark:bg-black '} dark:hover:bg-gray-600 hover:bg-gray-200`}
-                                    key={`${row.id}-${product.productshortname}`}
-                                    data-state={row.getIsSelected() && 'selected'}
-                                >
-                                    <TableCell className="p-2">{product.productshortname}</TableCell>
-                                    <TableCell className="p-2">{product.count}</TableCell>
-                                    <TableCell className="p-2">{product.count}</TableCell>
-                                    <TableCell className="p-2">0</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                );
-            },
+						<TableBody className="p-2">
+							{row?.original?.item_current_status?.map((product: any, index: number) => (
+								<TableRow
+									className={`${index % 2 === 0 ? 'bg-white dark:bg-gray-800 ' : 'bg-gray-100   dark:bg-black '} dark:hover:bg-gray-600 hover:bg-gray-200`}
+									key={`${row.id}-${product.productshortname}`}
+									data-state={row.getIsSelected() && 'selected'}
+								>
+									<TableCell className="p-2">{product.productshortname}</TableCell>
+									<TableCell className="p-2">{product.count}</TableCell>
+									<TableCell className="p-2">{product.count}</TableCell>
+									<TableCell className="p-2">0</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				);
+			},
 		},
 		{
 			accessorKey: "ordergroup",
@@ -382,3 +380,4 @@ const StageDetailTable = ({orderData, rowID} : {orderData : any, rowID: any}) =>
 };
 
 export default StageDetailTable;
+				

@@ -124,7 +124,6 @@ const AddExpCategoryToolbar = ({
                     <Button
                         className="w-[100px]"
                         onClick={() => {
-                            console.log(form, 'categories form');
                             const data = {
                                 category_name: newCategory ? form?.category_name : selectedCategory?.categoryName,
                                 subcategory_name: form?.subcategory_name,
