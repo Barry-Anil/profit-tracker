@@ -10,18 +10,105 @@ import TotalCurrencyTable from "./TotalCurrencyTable";
 import useStagesTableData from "../_hooks/getStagesTableData";
 import useSalestripAccountData from "../_hooks/getSalestripData";
 import { useSearchParams } from "next/navigation";
+import { SetStateAction, useEffect, useState } from "react";
+import axios from "axios";
+import { error } from "console";
+import useStagesData from "../_hooks/getStagesData";
 
 const Wrapper = () => {
 
+	const [orderData, setOrderData] = useState<any[]>([])
 	
 	const searchParams = useSearchParams()
 	const year = searchParams.get('year') || '2024';
 	const salestrip = searchParams.get('salestrip') || '';
-
+	const ordernumber = searchParams.get('searchOrder') || '';
+	const [rowID, setRowID] = useState('');
 	const salestripData = useSalestrip();
-	const stagesTableData = useStagesTableData(year);
+	const stagesData = useStagesData(year, salestrip);
+	const [selectedData, setSelectedData] = useState('acc_app_all');
+	const [rowPrice, setRowPrice] = useState<any[]>()
 
-	const { data: dataFilterBySalestrip, isLoading: dataFilterBySalestripLoading } = useSalestripAccountData(year, salestrip);
+	const [columnID, setColumnID] = useState()
+    const [columnIdValues, setColumnIdValues] = useState('');
+    const [rowIdValues, setRowIdValues] = useState('');
+    const [isOrderPriority, setIsOrderPriority] = useState(false)
+    const [fabricIssue, setFabricIssue] = useState('')
+
+	const userDataDetails = async () => {
+		const baseURL = "https://apierp02.officevg.com/sales/orders";
+		const headers = {
+			"x-access-token":
+				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkVDMDA1Iiwic2hvcnRuYW1lIjoiRUMwMDUgICAgICAgICAgIiwiZW1wY29kZSI6IkVDMDA1IiwidXNlcmlkIjoiMTE5NSIsImlhdCI6MTcwOTYzMzM0MywiZXhwIjoxNzA5NjY5MzQzfQ.CIhEYAtW2ey0ylvsdZ0_TMsWbNTDA1zD_9kT25FGXLE",
+			"Content-Type": "application/json",
+			Filtercriteria: `{"searchcriteria":"ordernumber","q":{"ordernumber":"${ordernumber}"}}`,
+		};
+
+		await axios.get(baseURL, { headers }).then((res: any) =>  setOrderData([res?.data])).catch((error: any) => console.log(error))
+	};
+
+	console.log(orderData, "orde data 23322323232")
+
+	useEffect(() => {
+		if (Array.isArray(orderData)) {
+			const combineByCurrency = (data: any) => {
+				const combinedData = data.reduce((acc : any, item: any) => {
+					const {
+						accounts_currencyint,
+						accounts_invoiceamt_currencyint,
+						accounts_receiptamt_currencyint,
+						accounts_invoiceamt,
+						accounts_receiptamt,
+						balancethb,
+					} = item;
+
+					// Parse the amounts
+					const invoiceAmtCurrencyInt =
+						Number.parseFloat(accounts_invoiceamt_currencyint) || 0;
+					const receiptAmtCurrencyInt =
+						Number.parseFloat(accounts_receiptamt_currencyint) || 0;
+					const invoiceAmt = Number.parseFloat(accounts_invoiceamt) || 0;
+					const receiptAmt = Number.parseFloat(accounts_receiptamt) || 0;
+					const balanceTHB = Number.parseFloat(balancethb) || 0;
+
+					// Initialize the accumulator for the current currency if not already done
+					if (!acc[accounts_currencyint]) {
+						acc[accounts_currencyint] = {
+							accounts_currencyint: accounts_currencyint,
+							accounts_invoiceamt_currencyint: 0,
+							accounts_receiptamt_currencyint: 0,
+							accounts_invoiceamt: 0,
+							accounts_receiptamt: 0,
+							balancethb: 0,
+							balance: 0,
+						};
+					}
+
+					// Accumulate the invoice and receipt amounts
+					acc[accounts_currencyint].accounts_invoiceamt_currencyint +=
+						invoiceAmtCurrencyInt;
+					acc[accounts_currencyint].accounts_receiptamt_currencyint +=
+						receiptAmtCurrencyInt;
+					acc[accounts_currencyint].accounts_invoiceamt += invoiceAmt;
+					acc[accounts_currencyint].accounts_receiptamt += receiptAmt;
+					acc[accounts_currencyint].balancethb += balanceTHB;
+					acc[accounts_currencyint].balance =
+						acc[accounts_currencyint].accounts_invoiceamt_currencyint -
+						acc[accounts_currencyint].accounts_receiptamt_currencyint;
+
+					return acc;
+				}, {});
+
+				return Object.values(combinedData);
+			};
+
+			const combinedArray = combineByCurrency(orderData);
+			setRowPrice(combinedArray);
+		}
+	}, [orderData]);
+
+	console.log(rowPrice, "row price")
+
 
 
 	return (
@@ -31,14 +118,24 @@ const Wrapper = () => {
 			</CardHeader>
 			<CardContent className="w-full pt-4 space-y-6">
 				<SelectSalesTrip salestripData={salestripData} />
-				<SearchOrderNumber />
-				<SourceFilter tableData={stagesTableData?.data} />
-				<StagesTable stagesTableData={stagesTableData}  />
-				<TotalCurrencyTable />
-				<StageDetailTable />
+				<SearchOrderNumber userDataDetails={userDataDetails}/>
+				<SourceFilter tableData={stagesData} setSelectedData={setSelectedData}/>
+				<StagesTable 
+					stagesData={stagesData}  
+					selectedData={selectedData} 
+					setColumnID={setColumnID}
+					setColumnIdValues={setColumnIdValues}
+					setIsOrderPriority={setIsOrderPriority}
+					setFabricIssue={setFabricIssue}
+					setRowID={setRowID}
+					setRowIdValues={setRowIdValues}
+				/>
+				<TotalCurrencyTable rowPrice={rowPrice}/>
+				<StageDetailTable orderData={orderData} rowID={rowID}/>
 			</CardContent>
 		</Card>
 	);
 };
 
 export default Wrapper;
+

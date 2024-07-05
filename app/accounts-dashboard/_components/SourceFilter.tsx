@@ -3,9 +3,12 @@ import { cn } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 
-const SourceFilter = ({ tableData }: { tableData: any }) => {
+const SourceFilter = ({ tableData, setSelectedData }: { tableData: any , setSelectedData: any}) => {
 	const searchParams = useSearchParams();
 	const selectedSource = searchParams.get("source") || "All";
+
+	console.log(tableData?.data?.data, "samsurin")
+
 	return (
 		<div className="mb-4 mt-4 flex flex-wrap gap-4">
 			<Button
@@ -21,9 +24,10 @@ const SourceFilter = ({ tableData }: { tableData: any }) => {
 						document.title,
 						`?${searchParams.toString()}`,
 					);
+					setSelectedData("acc_app_all");
 				}}
 			>
-				All - <span className=""> {tableData?.data?.data?.length}</span>
+				All - <span className=""> {tableData?.data?.data["acc_app_all"].reduce((acc: any, las: { total_order_count: any; } ) => acc + las.total_order_count, 0) }</span>
 			</Button>
 			<Button
 				className={cn(
@@ -38,15 +42,12 @@ const SourceFilter = ({ tableData }: { tableData: any }) => {
 						document.title,
 						`?${searchParams.toString()}`,
 					);
+					setSelectedData('acc_app_ss')
 				}}
 			>
 				Sam Surin -
 				<span className="">
-					{
-						tableData?.data?.data?.filter(
-							(item: any) => item?.ordersource?.trim() === "SS",
-						)?.length
-					}
+				{tableData?.data?.data["acc_app_ss"].reduce((acc: any, las: { total_order_count: any; } ) => acc + las.total_order_count, 0)}
 				</span>
 			</Button>
 			<Button
@@ -62,15 +63,12 @@ const SourceFilter = ({ tableData }: { tableData: any }) => {
 						document.title,
 						`?${searchParams.toString()}`,
 					);
+					setSelectedData('acc_app_reseller')
 				}}
 			>
 				Reseller -
 				<span className="">
-					{
-						tableData?.data?.data?.filter(
-							(item: any) => item?.ordersource?.trim() === "R",
-						)?.length
-					}
+				{tableData?.data?.data["acc_app_reseller"].reduce((acc: any, las: { total_order_count: any; } ) => acc + las.total_order_count, 0)}
 				</span>
 			</Button>
 			<Button
@@ -86,15 +84,12 @@ const SourceFilter = ({ tableData }: { tableData: any }) => {
 						document.title,
 						`?${searchParams.toString()}`,
 					);
+					setSelectedData('acc_app_local')
 				}}
 			>
 				Local -
 				<span className="">
-					{
-						tableData?.data?.data?.filter(
-							(item: any) => item?.ordersource?.trim() === "L",
-						)?.length
-					}
+				{tableData?.data?.data["acc_app_local"].reduce((acc: any, las: { total_order_count: any; } ) => acc + las.total_order_count, 0)}
 				</span>
 			</Button>
 			<Button
@@ -110,15 +105,12 @@ const SourceFilter = ({ tableData }: { tableData: any }) => {
 						document.title,
 						`?${searchParams.toString()}`,
 					);
+					setSelectedData('acc_app_ssvip')
 				}}
 			>
 				Sam Surin - VIP -
 				<span className="">
-					{
-						tableData?.data?.data?.filter(
-							(item: any) => item?.ordersource?.trim() === "SSV",
-						)?.length
-					}
+				{tableData?.data?.data["acc_app_ssvip"].reduce((acc: any, las: { total_order_count: any; } ) => acc + las.total_order_count, 0)}
 				</span>
 			</Button>
 		</div>

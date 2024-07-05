@@ -4,9 +4,13 @@ import { Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 
-const SearchOrderNumber = () => {
+const SearchOrderNumber = ({userDataDetails } : {userDataDetails : any}) => {
 	const searchParams = useSearchParams();
 	const orderNumber = searchParams.get("searchOrder");
+
+	const handleClick = async() => {
+		await userDataDetails()
+	}
 
 	return (
 		<div className="flex flex-wrap items-center justify-between gap-4">
@@ -30,7 +34,7 @@ const SearchOrderNumber = () => {
 							);
 						}}
 					/>
-					<Button>
+					<Button onClick={handleClick}>
 						<Search className="h-4 w-4" />
 					</Button>
 				</div>
