@@ -16,6 +16,7 @@ import { error } from "console";
 import useStagesData from "../_hooks/getStagesData";
 import useFilterOrderData from "../_hooks/getFilterOrderData";
 import { setDate } from "date-fns";
+import useCategory from "../_hooks/getCategoryData";
 
 const Wrapper = () => {
 
@@ -37,9 +38,11 @@ const Wrapper = () => {
 	const salestripData = useSalestrip();
 	const stagesData = useStagesData(year, salestrip);
 	const filterData = useFilterOrderData(year, columnID, rowID)
+	const categoryData = useCategory();
 
 	const [selectedData, setSelectedData] = useState('acc_app_all');
 	const [rowPrice, setRowPrice] = useState<any[]>()
+	const [openModal, setOpenModal] = useState(false)
 
 
 	const userDataDetails = async () => {
@@ -114,7 +117,6 @@ const Wrapper = () => {
 	}, [orderData]);
 
 
-	console.log(filterData, "filterData")
 
 	useEffect(() => {
 		setOrderData([])
@@ -124,6 +126,7 @@ const Wrapper = () => {
 		}
 
 	}, [filterData?.data, rowID, columnID])
+
 
 
 	return (
@@ -146,7 +149,13 @@ const Wrapper = () => {
 					setRowIdValues={setRowIdValues}
 				/>
 				<TotalCurrencyTable rowPrice={rowPrice} />
-				<StageDetailTable orderData={orderNumberData?.length != 0 ? orderNumberData : filterData?.data?.data} rowID={rowID} />
+				<StageDetailTable 
+					orderData={orderNumberData?.length != 0 ? orderNumberData : filterData?.data?.data} 
+					rowID={rowID} 
+					setOpenModal={setOpenModal} 
+					openModal={openModal} 
+					category={categoryData?.data?.data}
+				/>
 			</CardContent>
 		</Card>
 	);

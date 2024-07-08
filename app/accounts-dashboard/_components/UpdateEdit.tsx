@@ -22,7 +22,7 @@ const formSchema = z.object({
   });
   
   type FormValues = z.infer<typeof formSchema>;
-const UpdateEdit = (row: any) => {
+const UpdateEdit = ( row: any ) => {
     const updateOrder = useUpdateOrder();
     const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
@@ -57,9 +57,13 @@ const UpdateEdit = (row: any) => {
         });
     });
 
+    const onClose = () => {
+        // setOpenModal(false);
+    }
+
     return (
         <div>
-            <Dialog>
+            <Dialog >
                 <DialogTrigger asChild>
                     <Button variant="outline" size="sm">
                         <Edit className="m-0 h-4 w-4" />
@@ -142,8 +146,8 @@ const UpdateEdit = (row: any) => {
                     </div>
 
                     <DialogFooter>
-                        <Button variant="secondary">Cancel </Button>
-                        <Button type="submit">Update </Button>
+                        {/* <Button variant="secondary" onClick={onClose}>Cancel </Button> */}
+                        <Button type="submit" onClick={onSubmit}>Update </Button>
                     </DialogFooter>
                     </form>
                 </DialogContent>
