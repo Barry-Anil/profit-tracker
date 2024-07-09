@@ -17,6 +17,7 @@ import useStagesData from "../_hooks/getStagesData";
 import useFilterOrderData from "../_hooks/getFilterOrderData";
 import { setDate } from "date-fns";
 import useCategory from "../_hooks/getCategoryData";
+import useAmountReceived from "../_hooks/getamountReceived";
 
 const Wrapper = () => {
 
@@ -39,6 +40,7 @@ const Wrapper = () => {
 	const stagesData = useStagesData(year, salestrip);
 	const filterData = useFilterOrderData(year, columnID, rowID)
 	const categoryData = useCategory();
+	const amountReceived = useAmountReceived(salestrip, year)
 
 	const [selectedData, setSelectedData] = useState('acc_app_all');
 	const [rowPrice, setRowPrice] = useState<any[]>()
@@ -136,7 +138,7 @@ const Wrapper = () => {
 			</CardHeader>
 			<CardContent className="w-full pt-4 space-y-6">
 				<SelectSalesTrip salestripData={salestripData} />
-				<SearchOrderNumber userDataDetails={userDataDetails} />
+				<SearchOrderNumber userDataDetails={userDataDetails} amountReceived={amountReceived} />
 				<SourceFilter tableData={stagesData} setSelectedData={setSelectedData} />
 				<StagesTable
 					stagesData={stagesData}

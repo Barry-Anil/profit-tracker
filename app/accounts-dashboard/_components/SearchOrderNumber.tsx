@@ -4,13 +4,29 @@ import { Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 
-const SearchOrderNumber = ({userDataDetails } : {userDataDetails : any}) => {
+const SearchOrderNumber = ({userDataDetails, amountReceived } : {userDataDetails : any, amountReceived : any}) => {
 	const searchParams = useSearchParams();
 	const orderNumber = searchParams.get("searchOrder");
+
+	console.log(amountReceived, "dataaaaaa")
 
 	const handleClick = async() => {
 		await userDataDetails()
 	}
+
+
+	// 	let amount_received  = amountReceived === undefined ? 0 : amountReceived?.data?.data?.filter(
+	// 	(item: any) => item.accounts_payment_approval === "PP ",
+	// ).length + amountReceived?.filter(
+	// 	(item : any) => item.accounts_payment_approval === "FP ",
+	// ).length;
+
+
+
+	// console.log(amount_received, " 33332222")
+
+	
+
 
 	return (
 		<div className="flex flex-wrap items-center justify-between gap-4">
@@ -47,6 +63,7 @@ const SearchOrderNumber = ({userDataDetails } : {userDataDetails : any}) => {
 						name="amountRecd"
 						placeholder="Amount Recd"
 						disabled
+						// value={amount_received}
 					/>
 				</div>
 				<div className="space-y-1">
