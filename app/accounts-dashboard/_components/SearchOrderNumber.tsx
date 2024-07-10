@@ -4,28 +4,50 @@ import { Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 
-const SearchOrderNumber = ({userDataDetails, amountReceived } : {userDataDetails : any, amountReceived : any}) => {
+const SearchOrderNumber = ({ userDataDetails, amountReceived }: { userDataDetails: any, amountReceived: any }) => {
 	const searchParams = useSearchParams();
 	const orderNumber = searchParams.get("searchOrder");
 
 	console.log(amountReceived, "dataaaaaa")
 
-	const handleClick = async() => {
+	const handleClick = async () => {
 		await userDataDetails()
 	}
 
 
-	// 	let amount_received  = amountReceived === undefined ? 0 : amountReceived?.data?.data?.filter(
-	// 	(item: any) => item.accounts_payment_approval === "PP ",
-	// ).length + amountReceived?.filter(
-	// 	(item : any) => item.accounts_payment_approval === "FP ",
-	// ).length;
+	let amount_received = amountReceived?.data === undefined ? 0 : Number(amountReceived?.data?.data?.filter(
+		(item: any) => item.accounts_payment_approval === "PP ",
+	).reduce(
+		(acc: any,  item: any) =>
+			acc + Number.parseFloat(item.accounts_invoiceamt_currencyint),
+		0,
+	)
+		.toFixed(2)) + Number(amountReceived?.data?.data.filter(
+			(item: any) => item.accounts_payment_approval === "FP ",
+		).reduce(
+			(acc: any, item: any) =>
+				acc + Number.parseFloat(item.accounts_invoiceamt_currencyint),
+			0,
+		)
+			.toFixed(2));
 
 
 
-	// console.log(amount_received, " 33332222")
+	let pending_payment = 0;
 
-	
+	if (amountReceived?.data !== undefined) {
+		const approvals = ["PA ", "PD ", "DC ", "PC ", "PP "];
+
+		pending_payment = Number(approvals.reduce((total, approval) => {
+			return total + amountReceived.data.data
+				.filter((item: any) => item.accounts_payment_approval === approval)
+				.reduce((acc: any, item: any) => acc + Number.parseFloat(item.accounts_invoiceamt_currencyint), 0);
+		}, 0).toFixed(2))
+	}
+
+	console.log(amount_received, " 33332222")
+
+
 
 
 	return (
@@ -63,7 +85,7 @@ const SearchOrderNumber = ({userDataDetails, amountReceived } : {userDataDetails
 						name="amountRecd"
 						placeholder="Amount Recd"
 						disabled
-						// value={amount_received}
+						value={amount_received}
 					/>
 				</div>
 				<div className="space-y-1">
@@ -73,6 +95,7 @@ const SearchOrderNumber = ({userDataDetails, amountReceived } : {userDataDetails
 						name="pendingPayment"
 						placeholder="Pending Payment"
 						disabled
+						value={pending_payment}
 					/>
 				</div>
 			</div>

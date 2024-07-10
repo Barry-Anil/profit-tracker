@@ -122,14 +122,18 @@ const Wrapper = () => {
 
 	useEffect(() => {
 		setOrderData([])
-		if (filterData?.data != undefined) {
+		if (orderNumberData?.length != 0) {
 
+			setOrderData(orderNumberData)
+		}
+		else {
 			setOrderData(filterData?.data?.data)
 		}
 
-	}, [filterData?.data, rowID, columnID])
+	}, [filterData?.data, rowID, columnID, orderNumberData])
 
 
+	console.log(orderNumberData, "order numbeer data")
 
 	return (
 		<Card>
@@ -138,7 +142,8 @@ const Wrapper = () => {
 			</CardHeader>
 			<CardContent className="w-full pt-4 space-y-6">
 				<SelectSalesTrip salestripData={salestripData} />
-				<SearchOrderNumber userDataDetails={userDataDetails} amountReceived={amountReceived} />
+				
+				<SearchOrderNumber userDataDetails={userDataDetails} amountReceived={amountReceived}  />
 				<SourceFilter tableData={stagesData} setSelectedData={setSelectedData} />
 				<StagesTable
 					stagesData={stagesData}

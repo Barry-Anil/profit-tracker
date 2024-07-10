@@ -84,8 +84,8 @@ const SelectSalesTrip = ({ salestripData }: SelectSalesTripProps) => {
 				</SelectTrigger>
 				<SelectContent>
 					{filteredData?.length > 0 ? (
-						filteredData.map((item: any) => (
-							<SelectItem value={item.salestrip_name} key={item.salestrip_name}>
+						filteredData.map((item: any, index:any) => (
+							<SelectItem value={item.salestrip_name} key={index}>
 								{item.salestrip_name}
 							</SelectItem>
 						))

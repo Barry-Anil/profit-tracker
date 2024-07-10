@@ -10,6 +10,8 @@ import useUpdateOrder from '../_hooks/useUpdateOrder';
 import { toast } from 'sonner';import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useSearchParams } from 'next/navigation';
+import userDetailData from '../_hooks/getUserDataDetails';
 
 const formSchema = z.object({
     orderid: z.string().optional(),
@@ -23,7 +25,12 @@ const formSchema = z.object({
   
   type FormValues = z.infer<typeof formSchema>;
 const UpdateEdit = ( row: any ) => {
+    const searchParams = useSearchParams()
+	const ordernumber = searchParams.get('searchOrder') || '';
+    const userDetail = userDetailData(ordernumber);
     const updateOrder = useUpdateOrder();
+
+
     const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -49,7 +56,7 @@ const UpdateEdit = ( row: any ) => {
         updateOrder.mutateAsync(modifiedData, {
             onSuccess: (response: any) => {
                 toast.success('Order updated successfully');
-                // You might want to close the dialog here
+                userDetail.refetch()                // You might want to close the dialog here
             },
             onError: () => {
                 toast.error('Something went wrong! Please Try Again.');
@@ -126,7 +133,7 @@ const UpdateEdit = ( row: any ) => {
                             <Input
                                 disabled
                                 id="accounts_payment_approval"
-                                defaultValue={row?.row.original?.accounts_payment_approval}
+                                defaultValue={row?.row.original?.accounts_payment_approval + row?.row?.original?.accounts_payment_approval_desc}
                                 className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
@@ -138,6 +145,7 @@ const UpdateEdit = ( row: any ) => {
                                     id="rofc_notes"
                                     maxLength={100}
                                     {...register("rofc_notes")}
+                                    defaultValue={row?.row.original?.accounts_payment_desc}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 {errors.rofc_notes && <p>{errors.rofc_notes.message}</p>}
