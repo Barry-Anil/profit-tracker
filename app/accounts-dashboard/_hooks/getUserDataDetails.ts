@@ -16,9 +16,8 @@ const userDetailData = (ordernumber: any) => {
 
     return useQuery({
         queryFn: userData,
-        queryKey: ['userData' ],
+        queryKey: ['userData', ordernumber ],
 
     });
 }
 export default userDetailData;
-

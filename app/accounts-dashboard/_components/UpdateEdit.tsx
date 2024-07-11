@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -11,7 +12,7 @@ import { toast } from 'sonner';import { zodResolver } from "@hookform/resolvers/
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useSearchParams } from 'next/navigation';
-import userDetailData from '../_hooks/getUserDataDetails';
+import { useQueryClient } from '@tanstack/react-query';
 
 const formSchema = z.object({
     orderid: z.string().optional(),
@@ -25,11 +26,10 @@ const formSchema = z.object({
   
   type FormValues = z.infer<typeof formSchema>;
 const UpdateEdit = ( row: any ) => {
-    const searchParams = useSearchParams()
-	const ordernumber = searchParams.get('searchOrder') || '';
-    const userDetail = userDetailData(ordernumber);
     const updateOrder = useUpdateOrder();
-
+	const searchParams = useSearchParams()
+    const ordernumber = searchParams.get('searchOrder') || '';
+    const queryClient = useQueryClient()
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
@@ -40,7 +40,7 @@ const UpdateEdit = ( row: any ) => {
             salestrip_name: row?.row.original?.salestrip_name,
             ordergroup: row?.row.original?.ordergroup,
             accounts_payment_approval: row?.row.original?.accounts_payment_approval,
-            rofc_notes: row?.row.original?.rofc_notes
+            rofc_notes: row?.row.original?.accounts_payment_desc
         }
     });
 
@@ -56,7 +56,8 @@ const UpdateEdit = ( row: any ) => {
         updateOrder.mutateAsync(modifiedData, {
             onSuccess: (response: any) => {
                 toast.success('Order updated successfully');
-                userDetail.refetch()                // You might want to close the dialog here
+                queryClient.invalidateQueries({ queryKey: ["userDetailData"] });
+                // You might want to close the dialog here
             },
             onError: () => {
                 toast.error('Something went wrong! Please Try Again.');
@@ -133,7 +134,7 @@ const UpdateEdit = ( row: any ) => {
                             <Input
                                 disabled
                                 id="accounts_payment_approval"
-                                defaultValue={row?.row.original?.accounts_payment_approval + row?.row?.original?.accounts_payment_approval_desc}
+                                defaultValue={row?.row.original?.accounts_payment_approval}
                                 className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
@@ -144,8 +145,8 @@ const UpdateEdit = ( row: any ) => {
                                 <Textarea
                                     id="rofc_notes"
                                     maxLength={100}
+                                    defaultValue={row?.row.original.accounts_payment_desc}
                                     {...register("rofc_notes")}
-                                    defaultValue={row?.row.original?.accounts_payment_desc}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 {errors.rofc_notes && <p>{errors.rofc_notes.message}</p>}

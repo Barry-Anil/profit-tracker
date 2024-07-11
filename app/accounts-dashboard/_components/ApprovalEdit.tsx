@@ -4,10 +4,10 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller } from 'react-hook-form';
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 
 const formSchema = z.object({
     orderid: z.string(),
@@ -22,11 +22,11 @@ const formSchema = z.object({
     status: z.string(),
     approvalDate: z.string(),
     approvalCode: z.string(),
-    fabricStatus: z.string(),
+    fabricStatus: z.string().optional(),
     fabricDate: z.string(),
-    fabricDescription: z.string(),
-    totalStickerPrinted: z.string(),
-    lastStickerPrint: z.string(),
+    fabricDescription: z.string().optional(),
+    totalStickerPrinted: z.number().optional(),
+    lastStickerPrint: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -36,6 +36,8 @@ import useUpdateOrder from '../_hooks/useUpdateOrder';
 import { toast } from 'sonner';
 
 const ApprovalEdit = (row: any, approveButtonColor: any) => {
+
+
     function formattedDate(dateString: any) {
         const date = new Date(dateString);
 
@@ -46,40 +48,36 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
         return `${day}/${month}/${year}`;
     }
 
-    
-
     const updateOrder = useUpdateOrder();
 
-    const { register, handleSubmit, formState: {errors} } = useForm<FormValues>({
+    const {  register, handleSubmit, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             orderid: row?.row.original?.orderid,
             orderNumber: row?.row.original?.ordernumber,
-            approvedBy: row?.row.original?.accounts_user?.toString(),
+            approvedBy: row?.row.original?.accounts_user,
             currency: row?.row.original?.accounts_currencyint,
             chargeDate: formattedDate(row?.row.original?.accounts_chargedate),
-            invoiceAmountInt: (row?.row.original?.accounts_invoiceamt_currencyint),
-            paidAmountInt: (row?.row.original?.accounts_receiptamt_currencyint),
-            invoiceAmountBaht: (row?.row.original?.accounts_invoiceamt),
-            paidAmountBaht: (row?.row.original?.accounts_receiptamt),
-            status: row?.row.orginal?.accounts_payment_approval?.trim(), // This will need to be set based on the selected value
-            approvalDate: formattedDate(row?.row.original?.acc_approval_eta),
+            invoiceAmountInt: row?.row.original?.accounts_invoiceamt_currencyint,
+            paidAmountInt: row?.row.original?.accounts_receiptamt_currencyint,
+            invoiceAmountBaht: row?.row.original?.accounts_invoiceamt,
+            paidAmountBaht: row?.row.original?.accounts_receiptamt,
+            status: row?.row.orginal?.fabric_issue_status_desc, // This will need to be set based on the selected value
+            approvalDate: row?.row.original?.acc_approval_eta == null ? '' : formattedDate(row?.row.original?.acc_approval_eta),
             approvalCode: row?.row.original?.accounts_payment_desc,
-            fabricStatus: row?.row.original?.fabric_issue_status_desc,
-            fabricDate: formattedDate(row?.row.original?.fabric_date),
+            fabricStatus: row?.row.original?.accounts_payment_approval,
+            fabricDate: formattedDate(row?.row.original?.accounts_payment_approval),
             fabricDescription: row?.row.original?.rofc_notes,
             totalStickerPrinted: row?.row.original?.total_prod_items,
             lastStickerPrint: row?.row.original?.rofc_notes,
-        },
+        }
     });
 
-    // console.log(row, "register")
-
+    console.log(row, "row")
 
 
     const onSubmit = handleSubmit((data: FormValues) => {
-        console.log(data, 'data');
-
+        console.log(data, "data");
         const dataToSend = {
             orderid: data?.orderid,
             ordernumber: data?.orderNumber,
@@ -95,16 +93,18 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
             accounts_receiptamt_currencyint: data?.paidAmountInt.toString(),
             accounts_chargedate: data?.chargeDate,
         };
+        // Here you would typically send this data to your API
+        // For example:
         updateOrder.mutateAsync(dataToSend, {
-            onSuccess: (response: any) => {
+            onSuccess: () => {
                 toast.success('Order updated successfully');
-                // You might want to close the dialog here
             },
             onError: () => {
-                toast.error('Something went wrong! Please Try Again.');
+                toast.error('Something went wrong! Please try again.');
             },
         });
     });
+
 
 
     return (
@@ -128,7 +128,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 <Input
                                     disabled
                                     id="orderNumber"
-                                    {...register('orderNumber')}
+                                    {...register("orderNumber")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -139,7 +139,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 <Input
                                     disabled
                                     id="approved_by"
-                                    {...register('approvedBy')}
+                                    {...register("approvedBy")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -150,7 +150,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 <Input
                                     disabled
                                     id="currency"
-                                    {...register('currency')}
+                                    {...register("currency")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -159,9 +159,9 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                     Charge Date
                                 </Label>
                                 <Input
-                                    type="date"
+                                    type='date'
                                     id="charge_date"
-                                    {...register('chargeDate')}
+                                    {...register("chargeDate")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -171,17 +171,17 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 </Label>
                                 <Input
                                     id="invoice_amount_int"
-                                    {...register('invoiceAmountInt')}
+                                    {...register("invoiceAmountInt")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
                             <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="paid_amount_int" className="mb-1 text-left font-semibold text-gray-700">
+                                <Label htmlFor="paind_amount_int" className="mb-1 text-left font-semibold text-gray-700">
                                     Paid Amount(Int)
                                 </Label>
                                 <Input
-                                    id="paid_amount_int"
-                                    {...register('paidAmountInt')}
+                                    id="paind_amount_int"
+                                    {...register("paidAmountInt")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -191,7 +191,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 </Label>
                                 <Input
                                     id="invoice_amount_baht"
-                                    {...register('invoiceAmountBaht')}
+                                    {...register("invoiceAmountBaht")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -201,7 +201,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 </Label>
                                 <Input
                                     id="paid_invoice_baht"
-                                    {...register('paidAmountBaht')}
+                                    {...register("paidAmountBaht")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -212,26 +212,27 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 <Select
                                     onValueChange={(e) => {
                                         const searchParams = new URLSearchParams(window.location.search);
-                                        searchParams.set("status", e);
+                                        searchParams.set("year", e);
                                         window.history.replaceState(
                                             {},
                                             document.title,
                                             `?${searchParams.toString()}`,
                                         );
                                     }}
-                                    // value={{...register('status')}}
+                                    value={row?.row.original?.accounts_payment_approval || ""}
                                 >
                                     <SelectTrigger className="w-[240px]">
-                                        <SelectValue placeholder={row?.row?.original?.accounts_payment_approval} />
+                                        <SelectValue placeholder={row?.row.original?.accounts_payment_approval} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {row?.category?.map((item: any, index: number) => (
-                                            <SelectItem key={index} value={item.key}>
-                                                {item.value}
-                                            </SelectItem>
-                                        ))}
+                                    {row?.category?.map((item: any, index: number) => (
+                                                    <SelectItem key={index} value={item.key}>
+                                                        {item.value}
+                                                    </SelectItem>
+                                                ))}
                                     </SelectContent>
                                 </Select>
+                                
 
                             </div>
                             <div className="mb-4 flex flex-row items-center gap-2">
@@ -239,9 +240,9 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                     Approval Date
                                 </Label>
                                 <Input
-                                    type="date"
+                                    type='date'
                                     id="approval_date"
-                                    {...register('approvalDate')}
+                                    {...register("approvalDate")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -251,7 +252,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 </Label>
                                 <Input
                                     id="approval_code"
-                                    {...register('approvalCode')}
+                                    {...register("approvalCode")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -262,7 +263,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 <Input
                                     disabled
                                     id="fabric_status"
-                                    {...register('fabricStatus')}
+                                    {...register("fabricStatus")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -271,8 +272,9 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                     Fabric Date
                                 </Label>
                                 <Input
+                                type='date'
                                     id="fabric_date"
-                                    {...register('fabricDate')}
+                                    {...register("fabricDate")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -283,7 +285,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 <Input
                                     disabled
                                     id="fabric_desc"
-                                    {...register('fabricDescription')}
+                                    {...register("fabricDescription")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -294,7 +296,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 <Input
                                     disabled
                                     id="total_sticker"
-                                    {...register('totalStickerPrinted')}
+                                    {...register("totalStickerPrinted")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
@@ -305,13 +307,16 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                                 <Input
                                     disabled
                                     id="last_sticker"
-                                    {...register('lastStickerPrint')}
+                                    {...register("lastStickerPrint")}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
+
                         </div>
+
+
                         <DialogFooter>
-                            <Button variant="secondary">Cancel </Button>
+                            {/* <Button variant="secondary">Cancel </Button> */}
                             <Button type="submit">Update </Button>
                         </DialogFooter>
                     </form>

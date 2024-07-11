@@ -6,9 +6,6 @@ import { useSession } from 'next-auth/react';
 const useUpdateOrder = () => {
     const { data: session } = useSession();
     const updateOrder = async (data: any) => {
-        const modifiedData = {
-            ...data,
-        };
         // console.log(modifiedData);
         const baseURL = `https://apierp02.officevg.com/sales/orders/updateorder`;
         const headers = {
@@ -16,7 +13,7 @@ const useUpdateOrder = () => {
            
         };
 
-        return await axios.post(baseURL, modifiedData, { headers });
+        return await axios.post(baseURL, data, { headers });
     };
 
     return useMutation({
