@@ -7,29 +7,37 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
 
 
 const formSchema = z.object({
     orderid: z.string(),
     orderNumber: z.string(),
-    approvedBy: z.string(),
+    approvedBy: z.number(),
     currency: z.string(),
     chargeDate: z.string(),
-    invoiceAmountInt: z.number(),
-    paidAmountInt: z.number(),
-    invoiceAmountBaht: z.number(),
-    paidAmountBaht: z.number(),
-    status: z.string(),
+    invoiceAmountInt: z.string(),
+    paidAmountInt: z.string(),
+    invoiceAmountBaht: z.string(),
+    paidAmountBaht: z.string(),
+    status:  z.string(),
     approvalDate: z.string(),
     approvalCode: z.string(),
     fabricStatus: z.string().optional(),
     fabricDate: z.string(),
     fabricDescription: z.string().optional(),
-    totalStickerPrinted: z.number().optional(),
+    totalStickerPrinted: z.string().optional(),
     lastStickerPrint: z.string().optional(),
 });
 
-type FormValues = z.infer<typeof formSchema>;
 
 import { ArrowUpRight, Edit } from 'lucide-react';
 import useUpdateOrder from '../_hooks/useUpdateOrder';
@@ -50,7 +58,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
 
     const updateOrder = useUpdateOrder();
 
-    const {  register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+    const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             orderid: row?.row.original?.orderid,
@@ -62,10 +70,10 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
             paidAmountInt: row?.row.original?.accounts_receiptamt_currencyint,
             invoiceAmountBaht: row?.row.original?.accounts_invoiceamt,
             paidAmountBaht: row?.row.original?.accounts_receiptamt,
-            status: row?.row.orginal?.fabric_issue_status_desc, // This will need to be set based on the selected value
+            status: row?.row.original?.accounts_payment_approval, // This will need to be set based on the selected value
             approvalDate: row?.row.original?.acc_approval_eta == null ? '' : formattedDate(row?.row.original?.acc_approval_eta),
             approvalCode: row?.row.original?.accounts_payment_desc,
-            fabricStatus: row?.row.original?.accounts_payment_approval,
+            fabricStatus: row?.row.original?.fabric_issue_status,
             fabricDate: formattedDate(row?.row.original?.accounts_payment_approval),
             fabricDescription: row?.row.original?.rofc_notes,
             totalStickerPrinted: row?.row.original?.total_prod_items,
@@ -73,256 +81,296 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
         }
     });
 
-    console.log(row, "row")
+    console.log(form, row, "row")
 
 
-    const onSubmit = handleSubmit((data: FormValues) => {
-        console.log(data, "data");
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log("Form submitted with values:", values);
         const dataToSend = {
-            orderid: data?.orderid,
-            ordernumber: data?.orderNumber,
-            accounts_payment_approval: data?.status,
-            accounts_approval_date: data?.approvalDate,
-            accounts_payment_desc: data?.approvalCode,
-            accounts_user: data?.approvedBy,
-            accounts_invoiceamt: data?.invoiceAmountBaht.toString(),
-            accounts_receiptamt: data?.paidAmountBaht.toString(),
+            orderid: values?.orderid,
+            ordernumber: values?.orderNumber,
+            accounts_payment_approval: values?.status,
+            accounts_approval_date: values?.approvalDate,
+            accounts_payment_desc: values?.approvalCode,
+            accounts_user: values?.approvedBy,
+            accounts_invoiceamt: values?.invoiceAmountBaht.toString(),
+            accounts_receiptamt: values?.paidAmountBaht.toString(),
             acc_approval_ata: null,
-            accounts_currencyint: data?.currency,
-            accounts_invoiceamt_currencyint: data?.invoiceAmountInt.toString(),
-            accounts_receiptamt_currencyint: data?.paidAmountInt.toString(),
-            accounts_chargedate: data?.chargeDate,
+            accounts_currencyint: values?.currency,
+            accounts_invoiceamt_currencyint: values?.invoiceAmountInt.toString(),
+            accounts_receiptamt_currencyint: values?.paidAmountInt.toString(),
+            accounts_chargedate: values?.chargeDate,
         };
-        // Here you would typically send this data to your API
+        console.log("Form submitted with values:", values);
         // For example:
         updateOrder.mutateAsync(dataToSend, {
-            onSuccess: () => {
+            onSuccess: (data) => {
+                console.log("Update successful:", data);
                 toast.success('Order updated successfully');
             },
-            onError: () => {
+            onError: (error) => {
+                console.error("Update failed:", error);
                 toast.error('Something went wrong! Please try again.');
             },
         });
-    });
+    };
 
 
 
     return (
         <div>
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="link" className={`text-base ${approveButtonColor}`}>
-                        Approve & Create <ArrowUpRight className="ml-1 h-4 w-4" />
-                    </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[725px]">
-                    <DialogHeader>
-                        <DialogTitle>Update Account Notes</DialogTitle>
-                    </DialogHeader>
-                    <form onSubmit={onSubmit}>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="orderNumber" className="mb-1 text-left font-semibold text-gray-700">
-                                    Order Number
-                                </Label>
-                                <Input
-                                    disabled
-                                    id="orderNumber"
-                                    {...register("orderNumber")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="link" className={`text-base ${approveButtonColor}`}>
+                    Approve & Create <ArrowUpRight className="ml-1 h-4 w-4" />
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[800px]">
+                <DialogHeader>
+                    <DialogTitle>Update Account Notes</DialogTitle>
+                </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit, (errors) => console.log("Validation errors:", errors))} className="space-y-2">
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="col-span-2">
+                                {/* <h3 className="text-lg font-semibold mb-2">Order Information</h3> */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="orderNumber"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Order Number</FormLabel>
+                                                <FormControl>
+                                                    <Input disabled {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="approvedBy"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Approved By </FormLabel>
+                                                <FormControl>
+                                                    <Input  disabled {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
                             </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="approved_by" className="mb-1 text-left font-semibold text-gray-700">
-                                    Approved By
-                                </Label>
-                                <Input
-                                    disabled
-                                    id="approved_by"
-                                    {...register("approvedBy")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="currency" className="mb-1 text-left font-semibold text-gray-700">
-                                    Currency
-                                </Label>
-                                <Input
-                                    disabled
-                                    id="currency"
-                                    {...register("currency")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="charge_date" className="mb-1 text-left font-semibold text-gray-700">
-                                    Charge Date
-                                </Label>
-                                <Input
-                                    type='date'
-                                    id="charge_date"
-                                    {...register("chargeDate")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="invoice_amount_int" className="mb-1 text-left font-semibold text-gray-700">
-                                    Invoice Amount(Int)
-                                </Label>
-                                <Input
-                                    id="invoice_amount_int"
-                                    {...register("invoiceAmountInt")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="paind_amount_int" className="mb-1 text-left font-semibold text-gray-700">
-                                    Paid Amount(Int)
-                                </Label>
-                                <Input
-                                    id="paind_amount_int"
-                                    {...register("paidAmountInt")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="invoice_amount_baht" className="mb-1 text-left font-semibold text-gray-700">
-                                    Invoice Amount(Baht)
-                                </Label>
-                                <Input
-                                    id="invoice_amount_baht"
-                                    {...register("invoiceAmountBaht")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="paid_invoice_baht" className="mb-1 text-left font-semibold text-gray-700">
-                                    Paid Amount(Baht)
-                                </Label>
-                                <Input
-                                    id="paid_invoice_baht"
-                                    {...register("paidAmountBaht")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="status" className="mb-1 text-left font-semibold text-gray-700">
-                                    Status
-                                </Label>
-                                <Select
-                                    onValueChange={(e) => {
-                                        const searchParams = new URLSearchParams(window.location.search);
-                                        searchParams.set("year", e);
-                                        window.history.replaceState(
-                                            {},
-                                            document.title,
-                                            `?${searchParams.toString()}`,
-                                        );
-                                    }}
-                                    value={row?.row.original?.accounts_payment_approval || ""}
-                                >
-                                    <SelectTrigger className="w-[240px]">
-                                        <SelectValue placeholder={row?.row.original?.accounts_payment_approval} />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                    {row?.category?.map((item: any, index: number) => (
-                                                    <SelectItem key={index} value={item.key}>
-                                                        {item.value}
-                                                    </SelectItem>
-                                                ))}
-                                    </SelectContent>
-                                </Select>
-                                
-
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="approval_date" className="mb-1 text-left font-semibold text-gray-700">
-                                    Approval Date
-                                </Label>
-                                <Input
-                                    type='date'
-                                    id="approval_date"
-                                    {...register("approvalDate")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-col items-start gap-2 col-span-2">
-                                <Label htmlFor="approval_code" className="mb-1 text-left font-semibold text-gray-700">
-                                    Approval code
-                                </Label>
-                                <Input
-                                    id="approval_code"
-                                    {...register("approvalCode")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-col items-start gap-2 col-span-2">
-                                <Label htmlFor="fabric_status" className="mb-1 text-left font-semibold text-gray-700">
-                                    Fabric Status
-                                </Label>
-                                <Input
-                                    disabled
-                                    id="fabric_status"
-                                    {...register("fabricStatus")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="fabric_date" className="mb-1 text-left font-semibold text-gray-700">
-                                    Fabric Date
-                                </Label>
-                                <Input
-                                type='date'
-                                    id="fabric_date"
-                                    {...register("fabricDate")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="fabric_desc" className="mb-1 text-left font-semibold text-gray-700">
-                                    Fabric Description
-                                </Label>
-                                <Input
-                                    disabled
-                                    id="fabric_desc"
-                                    {...register("fabricDescription")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="total_sticker" className="mb-1 text-left font-semibold text-gray-700">
-                                    Total Sticker Printed
-                                </Label>
-                                <Input
-                                    disabled
-                                    id="total_sticker"
-                                    {...register("totalStickerPrinted")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-row items-center gap-2">
-                                <Label htmlFor="last_sticker" className="mb-1 text-left font-semibold text-gray-700">
-                                    Last Sticker Print
-                                </Label>
-                                <Input
-                                    disabled
-                                    id="last_sticker"
-                                    {...register("lastStickerPrint")}
-                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
+                            
+                            <div className="col-span-2">
+                                {/* <h3 className="text-lg font-semibold mb-2">Financial Details</h3> */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="currency"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Currency</FormLabel>
+                                                <FormControl>
+                                                    <Input disabled {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="chargeDate"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Charge Date - <span className='text-red-400'>{formattedDate(row?.row.original.accounts_chargedate)}</span></FormLabel>
+                                                <FormControl>
+                                                    <Input type='date' defaultValue={formattedDate(row?.row.original.accounts_chargedate)} {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="invoiceAmountInt"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Invoice Amount (Int)</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="paidAmountInt"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Paid Amount (Int)</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="invoiceAmountBaht"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Invoice Amount (Baht)</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="paidAmountBaht"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Paid Amount (Baht)</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
                             </div>
 
+                            <div className="col-span-2">
+                                {/* <h3 className="text-lg font-semibold mb-2">Approval Details</h3> */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="status"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Status</FormLabel>
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    defaultValue={row?.row.original?.accounts_payment_approval}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Select status" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {row?.category?.map((item: any, index: number) => (
+                                                            <SelectItem key={index} value={item.key}>
+                                                                {item.value}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="approvalDate"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Approval Date - <span className='text-red-400'>{formattedDate(row?.row.original?.acc_approval_eta)}</span></FormLabel>
+                                                <FormControl>
+                                                    <Input type='date' {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="approvalCode"
+                                        render={({ field }) => (
+                                            <FormItem className="col-span-2">
+                                                <FormLabel>Approval Code</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="col-span-2">
+                                {/* <h3 className="text-lg font-semibold mb-2">Additional Information</h3> */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="fabricStatus"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Fabric Status</FormLabel>
+                                                <FormControl>
+                                                    <Input disabled {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="fabricDate"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Fabric Date - <span className='text-red-500'>{formattedDate(row?.row.original?.accounts_payment_approval)}</span> </FormLabel>
+                                                <FormControl>
+                                                    <Input type='date' {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="fabricDescription"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Fabric Description</FormLabel>
+                                                <FormControl>
+                                                    <Input disabled {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="totalStickerPrinted"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Total Stickers Printed</FormLabel>
+                                                <FormControl>
+                                                    <Input disabled {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="lastStickerPrint"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Last Sticker Print Date</FormLabel>
+                                                <FormControl>
+                                                    <Input disabled {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            </div>
                         </div>
 
-
                         <DialogFooter>
-                            {/* <Button variant="secondary">Cancel </Button> */}
-                            <Button type="submit">Update </Button>
+                            <Button type="submit">Update</Button>
                         </DialogFooter>
                     </form>
-                </DialogContent>
-            </Dialog>
-        </div>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    </div>
     );
 };
 

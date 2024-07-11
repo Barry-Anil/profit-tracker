@@ -8,7 +8,6 @@ const SearchOrderNumber = ({ userDataDetails, amountReceived }: { userDataDetail
 	const searchParams = useSearchParams();
 	const orderNumber = searchParams.get("searchOrder");
 
-	console.log(amountReceived, "dataaaaaa")
 
 	const handleClick = async () => {
 		await userDataDetails()
@@ -45,7 +44,6 @@ const SearchOrderNumber = ({ userDataDetails, amountReceived }: { userDataDetail
 		}, 0).toFixed(2))
 	}
 
-	console.log(amount_received, " 33332222")
 
 
 
