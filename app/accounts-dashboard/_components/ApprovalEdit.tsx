@@ -1,4 +1,5 @@
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -42,9 +43,11 @@ const formSchema = z.object({
 import { ArrowUpRight, Edit } from 'lucide-react';
 import useUpdateOrder from '../_hooks/useUpdateOrder';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ApprovalEdit = (row: any, approveButtonColor: any) => {
 
+    const [openModal, setOpenModal] = useState(false)
 
     function formattedDate(dateString: any) {
         const date = new Date(dateString);
@@ -57,6 +60,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
     }
 
     const updateOrder = useUpdateOrder();
+    const queryClient = useQueryClient()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -107,6 +111,8 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
             onSuccess: (data) => {
                 console.log("Update successful:", data);
                 toast.success('Order updated successfully');
+                queryClient.invalidateQueries({ queryKey: ["userData"] });
+                setOpenModal(false);
             },
             onError: (error) => {
                 console.error("Update failed:", error);
@@ -119,7 +125,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
 
     return (
         <div>
-        <Dialog>
+        <Dialog open={openModal} onOpenChange={setOpenModal}>
             <DialogTrigger asChild>
                 <Button variant="link" className={`text-base ${approveButtonColor}`}>
                     Approve & Create <ArrowUpRight className="ml-1 h-4 w-4" />
@@ -364,6 +370,7 @@ const ApprovalEdit = (row: any, approveButtonColor: any) => {
                         </div>
 
                         <DialogFooter>
+                        <Button variant="secondary" onClick={() => setOpenModal(false)}>Cancel </Button>
                             <Button type="submit">Update</Button>
                         </DialogFooter>
                     </form>

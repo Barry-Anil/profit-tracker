@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Edit } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import useUpdateOrder from '../_hooks/useUpdateOrder';
-import { toast } from 'sonner';import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from 'sonner'; import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useSearchParams } from 'next/navigation';
@@ -22,14 +22,16 @@ const formSchema = z.object({
     ordergroup: z.string().optional(),
     accounts_payment_approval: z.string().optional(),
     rofc_notes: z.string().max(100, "Notes must be 100 characters or less")
-  });
-  
-  type FormValues = z.infer<typeof formSchema>;
-const UpdateEdit = ( row: any ) => {
+});
+
+type FormValues = z.infer<typeof formSchema>;
+const UpdateEdit = (row: any) => {
     const updateOrder = useUpdateOrder();
-	const searchParams = useSearchParams()
+    const searchParams = useSearchParams()
     const ordernumber = searchParams.get('searchOrder') || '';
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
+    const [openModal, setOpenModal] = useState(false)
+
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
@@ -46,17 +48,18 @@ const UpdateEdit = ( row: any ) => {
 
     const onSubmit = handleSubmit((values: FormValues) => {
         const modifiedData = {
-            orderid : values.orderid,
+            orderid: values.orderid,
             orderinfo: {
                 orderid: values.orderid,
                 ordernumber: values.ordernumber,
                 accounts_payment_desc: values.rofc_notes
-            }  
+            }
         };
         updateOrder.mutateAsync(modifiedData, {
             onSuccess: (response: any) => {
                 toast.success('Order updated successfully');
-                queryClient.invalidateQueries({ queryKey: ["userDetailData"] });
+                queryClient.invalidateQueries({ queryKey: ["userData"] });
+                setOpenModal(false);
                 // You might want to close the dialog here
             },
             onError: () => {
@@ -65,13 +68,10 @@ const UpdateEdit = ( row: any ) => {
         });
     });
 
-    const onClose = () => {
-        // setOpenModal(false);
-    }
 
     return (
         <div>
-            <Dialog >
+            <Dialog open={openModal} onOpenChange={setOpenModal} >
                 <DialogTrigger asChild>
                     <Button variant="outline" size="sm">
                         <Edit className="m-0 h-4 w-4" />
@@ -82,63 +82,63 @@ const UpdateEdit = ( row: any ) => {
                         <DialogTitle>Update Account Notes</DialogTitle>
                     </DialogHeader>
                     <form onSubmit={onSubmit}>
-                    <div className="grid grid-cols-1 gap-4">
-                        <div className="mb-4 flex flex-row items-center gap-2">
-                            <Label htmlFor="orderNumber" className="mb-1 text-left font-semibold text-gray-700">
-                                Order Number
-                            </Label>
-                            <Input
-                                disabled
-                                id="orderNumber"
-                                defaultValue={row?.row.original?.ordernumber}
-                                className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div className="mb-4 flex flex-row items-center gap-2">
-                            <Label htmlFor="orderdate" className="mb-1 text-left font-semibold text-gray-700">
-                                Order Date
-                            </Label>
-                            <Input
-                                disabled
-                                id="orderdate"
-                                defaultValue={row?.row.original?.orderdate}
-                                className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div className="mb-4 flex flex-row items-center gap-2">
-                            <Label htmlFor="salestrip_name" className="mb-1 text-left font-semibold text-gray-700">
-                                Sales Trip
-                            </Label>
-                            <Input
-                                disabled
-                                id="salestrip_name"
-                                defaultValue={row?.row.original?.salestrip_name}
-                                className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div className="mb-4 flex flex-row items-center gap-2">
-                            <Label htmlFor="ordergroup" className="mb-1 text-left font-semibold text-gray-700">
-                                Grouping
-                            </Label>
-                            <Input
-                                disabled
-                                id="ordergroup"
-                                defaultValue={row?.row.original?.ordergroup}
-                                className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div className="mb-4 flex flex-row items-center gap-2">
-                            <Label htmlFor="accounts_payment_approval" className="mb-1 text-left font-semibold text-gray-700">
-                                Account Status
-                            </Label>
-                            <Input
-                                disabled
-                                id="accounts_payment_approval"
-                                defaultValue={row?.row.original?.accounts_payment_approval}
-                                className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div className="mb-4 flex flex-row items-center gap-2">
+                        <div className="grid grid-cols-1 gap-4">
+                            <div className="mb-4 flex flex-row items-center gap-2">
+                                <Label htmlFor="orderNumber" className="mb-1 text-left font-semibold text-gray-700">
+                                    Order Number
+                                </Label>
+                                <Input
+                                    disabled
+                                    id="orderNumber"
+                                    defaultValue={row?.row.original?.ordernumber}
+                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div className="mb-4 flex flex-row items-center gap-2">
+                                <Label htmlFor="orderdate" className="mb-1 text-left font-semibold text-gray-700">
+                                    Order Date
+                                </Label>
+                                <Input
+                                    disabled
+                                    id="orderdate"
+                                    defaultValue={row?.row.original?.orderdate}
+                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div className="mb-4 flex flex-row items-center gap-2">
+                                <Label htmlFor="salestrip_name" className="mb-1 text-left font-semibold text-gray-700">
+                                    Sales Trip
+                                </Label>
+                                <Input
+                                    disabled
+                                    id="salestrip_name"
+                                    defaultValue={row?.row.original?.salestrip_name}
+                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div className="mb-4 flex flex-row items-center gap-2">
+                                <Label htmlFor="ordergroup" className="mb-1 text-left font-semibold text-gray-700">
+                                    Grouping
+                                </Label>
+                                <Input
+                                    disabled
+                                    id="ordergroup"
+                                    defaultValue={row?.row.original?.ordergroup}
+                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div className="mb-4 flex flex-row items-center gap-2">
+                                <Label htmlFor="accounts_payment_approval" className="mb-1 text-left font-semibold text-gray-700">
+                                    Account Status
+                                </Label>
+                                <Input
+                                    disabled
+                                    id="accounts_payment_approval"
+                                    defaultValue={row?.row.original?.accounts_payment_approval}
+                                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div className="mb-4 flex flex-row items-center gap-2">
                                 <Label htmlFor="rofc_notes" className="mb-1 text-left font-semibold text-gray-700">
                                     Notes
                                 </Label>
@@ -151,13 +151,13 @@ const UpdateEdit = ( row: any ) => {
                                 />
                                 {errors.rofc_notes && <p>{errors.rofc_notes.message}</p>}
                             </div>
-                        
-                    </div>
 
-                    <DialogFooter>
-                        {/* <Button variant="secondary" onClick={onClose}>Cancel </Button> */}
-                        <Button type="submit" onClick={onSubmit}>Update </Button>
-                    </DialogFooter>
+                        </div>
+
+                        <DialogFooter>
+                            <Button variant="secondary" onClick={() => setOpenModal(false)}>Cancel </Button>
+                            <Button type="submit" onClick={onSubmit}>Update </Button>
+                        </DialogFooter>
                     </form>
                 </DialogContent>
             </Dialog>

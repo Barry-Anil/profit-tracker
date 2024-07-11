@@ -38,13 +38,12 @@ const Wrapper = () => {
 
 	const salestripData = useSalestrip();
 	const stagesData = useStagesData(year, salestrip);
-	const filterData = useFilterOrderData(year, columnID, rowID)
+	const filterData = useFilterOrderData(year, columnID, rowID, salestrip)
 	const categoryData = useCategory();
 	const amountReceived = useAmountReceived(salestrip, year)
 
 	const [selectedData, setSelectedData] = useState('acc_app_all');
 	const [rowPrice, setRowPrice] = useState<any[]>()
-	const [openModal, setOpenModal] = useState(false)
 
 
 	const userDataDetails = async () => {
@@ -142,7 +141,6 @@ const Wrapper = () => {
 			</CardHeader>
 			<CardContent className="w-full pt-4 space-y-6">
 				<SelectSalesTrip salestripData={salestripData} />
-				
 				<SearchOrderNumber userDataDetails={userDataDetails} amountReceived={amountReceived}  />
 				<SourceFilter tableData={stagesData} setSelectedData={setSelectedData} />
 				<StagesTable
@@ -159,8 +157,6 @@ const Wrapper = () => {
 				<StageDetailTable 
 					orderData={orderNumberData?.length != 0 ? orderNumberData : filterData?.data?.data} 
 					rowID={rowID} 
-					setOpenModal={setOpenModal} 
-					openModal={openModal} 
 					category={categoryData?.data?.data}
 				/>
 			</CardContent>

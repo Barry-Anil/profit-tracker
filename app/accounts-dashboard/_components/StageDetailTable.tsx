@@ -20,7 +20,7 @@ import UpdateEdit from "./UpdateEdit";
 import ApprovalEdit from "./ApprovalEdit";
 const alternativeData: any[] = [];
 
-const StageDetailTable = ({ orderData, rowID, setOpenModal, openModal, category }: { orderData: any, rowID: any, setOpenModal: any, openModal: any, category: any }) => {
+const StageDetailTable = ({ orderData, rowID,  category }: { orderData: any, rowID: any,  category: any }) => {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[],
@@ -33,6 +33,8 @@ const StageDetailTable = ({ orderData, rowID, setOpenModal, openModal, category 
 
 	const searchParams = useSearchParams();
 	const ordernumber = searchParams.get('searchOrder') || '';
+
+
 
 
 	const columns: ColumnDef<any>[] = [
@@ -59,7 +61,7 @@ const StageDetailTable = ({ orderData, rowID, setOpenModal, openModal, category 
 				return (
 					<div className="flex gap-2">
 						<ApprovalEdit row={row} approveButtonColor={approveButtonColor} category={category} />
-						<UpdateEdit row={row} />
+						<UpdateEdit row={row}  />
 					</div>
 				);
 			},

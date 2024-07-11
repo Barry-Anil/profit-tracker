@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const useFilterOrderData = (year: any, orderPriority : any , accounts_payment_approval:any) => {
+const useFilterOrderData = (year: any, orderPriority : any , accounts_payment_approval:any, salestrip: any) => {
 	const filteredData = async () => {
 		const baseURL = "https://apierp02.officevg.com/sales/orders";
 		const headers = {
@@ -10,7 +10,7 @@ const useFilterOrderData = (year: any, orderPriority : any , accounts_payment_ap
             Filtercriteria: JSON.stringify({
               searchcriteria: "orderlist_activesalestrip",
               q: {
-                salestrip: "",
+                salestrip: salestrip,
                 ordergrouping: "",
                 ordersource: "",
                 orderpriority: orderPriority,
@@ -30,7 +30,7 @@ const useFilterOrderData = (year: any, orderPriority : any , accounts_payment_ap
 
 	return useQuery({
 		queryFn: filteredData,
-		queryKey: ["filteredData", orderPriority, accounts_payment_approval],
+		queryKey: ["filteredData", orderPriority, accounts_payment_approval, salestrip],
 	});
 };
 
