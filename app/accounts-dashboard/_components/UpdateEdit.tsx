@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -8,9 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Edit } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import useUpdateOrder from '../_hooks/useUpdateOrder';
-import { toast } from 'sonner'; import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { toast } from 'sonner';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { useSearchParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -21,19 +22,22 @@ const formSchema = z.object({
     salestrip_name: z.string().optional(),
     ordergroup: z.string().optional(),
     accounts_payment_approval: z.string().optional(),
-    rofc_notes: z.string().max(100, "Notes must be 100 characters or less")
+    rofc_notes: z.string().max(100, 'Notes must be 100 characters or less'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 const UpdateEdit = (row: any) => {
     const updateOrder = useUpdateOrder();
-    const searchParams = useSearchParams()
+    const searchParams = useSearchParams();
     const ordernumber = searchParams.get('searchOrder') || '';
     const queryClient = useQueryClient();
-    const [openModal, setOpenModal] = useState(false)
+    const [openModal, setOpenModal] = useState(false);
 
-
-    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             orderid: row?.row.original?.orderid,
@@ -42,8 +46,8 @@ const UpdateEdit = (row: any) => {
             salestrip_name: row?.row.original?.salestrip_name,
             ordergroup: row?.row.original?.ordergroup,
             accounts_payment_approval: row?.row.original?.accounts_payment_approval,
-            rofc_notes: row?.row.original?.accounts_payment_desc
-        }
+            rofc_notes: row?.row.original?.accounts_payment_desc,
+        },
     });
 
     const onSubmit = handleSubmit((values: FormValues) => {
@@ -52,15 +56,15 @@ const UpdateEdit = (row: any) => {
             orderinfo: {
                 orderid: values.orderid,
                 ordernumber: values.ordernumber,
-                accounts_payment_desc: values.rofc_notes
-            }
+                accounts_payment_desc: values.rofc_notes,
+            },
         };
         updateOrder.mutateAsync(modifiedData, {
-            onSuccess: (response: any) => {
-                toast.success('Order updated successfully');
-                queryClient.invalidateQueries({ queryKey: ["userData"] });
+            onSuccess: () => {
+                toast.success('Order updated successfully! Please wait for the updated data to be reflected.');
+                queryClient.invalidateQueries({ queryKey: ['filteredData'] });
+                queryClient.invalidateQueries({ queryKey: ['userData'] });
                 setOpenModal(false);
-                // You might want to close the dialog here
             },
             onError: () => {
                 toast.error('Something went wrong! Please Try Again.');
@@ -68,10 +72,9 @@ const UpdateEdit = (row: any) => {
         });
     });
 
-
     return (
         <div>
-            <Dialog open={openModal} onOpenChange={setOpenModal} >
+            <Dialog open={openModal} onOpenChange={setOpenModal}>
                 <DialogTrigger asChild>
                     <Button variant="outline" size="sm">
                         <Edit className="m-0 h-4 w-4" />
@@ -145,18 +148,21 @@ const UpdateEdit = (row: any) => {
                                 <Textarea
                                     id="rofc_notes"
                                     maxLength={100}
-                                    defaultValue={row?.row.original.accounts_payment_desc}
-                                    {...register("rofc_notes")}
+                                    defaultValue={row?.row?.original?.accounts_payment_desc}
+                                    {...register('rofc_notes')}
                                     className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 {errors.rofc_notes && <p>{errors.rofc_notes.message}</p>}
                             </div>
-
                         </div>
 
                         <DialogFooter>
-                            <Button variant="secondary" onClick={() => setOpenModal(false)}>Cancel </Button>
-                            <Button type="submit" onClick={onSubmit}>Update </Button>
+                            <Button variant="secondary" onClick={() => setOpenModal(false)}>
+                                Cancel{' '}
+                            </Button>
+                            <Button type="submit" onClick={onSubmit} disabled={updateOrder.isPending}>
+                                {updateOrder.isPending ? 'Updating...' : 'Update'}
+                            </Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>
